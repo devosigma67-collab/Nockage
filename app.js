@@ -102,53 +102,52 @@ function setMode(m){uploadMode=m;document.querySelectorAll(".mode").forEach(b=>b
 document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 $("videoFile").onchange=e=>{const f=e.target.files[0];$("fileInfo").textContent=f?`${f.name} · ${(f.size/1048576).toFixed(1)} MB`:"Maximum 50 MB on the free backend."}
 
-$("uploadForm")?.addEventListener("submit", async e=>{
-  e.preventDefault();
+    if(up.error) throw up.error;
 
-  if(!currentUser || !ready){
-    return openAuth(false);
-  }
+    if(progressBar) progressBar.style.width="70%";
 
-  const file=$("videoFile")?.files?.[0];
-
-  if(!file){
-    return toast("Choose a video first.");
-  }
-
-  if(file.size>50*1024*1024){
-    return toast("This free setup accepts videos up to 50 MB.");
-  }
-
-  const title=$("videoTitle")?.value.trim() || "";
-  const desc=$("videoDescription")?.value.trim() || "";
-  const visibility=$("visibility")?.value || "public";
-
-  if(!title){
-    return toast("Enter a video title.");
-  }
-
-  const progress=$("uploadProgress");
-  const progressBar=progress?.querySelector("span");
-
-  if(progress){
-    progress.style.display="block";
-  }
-
-  if(progressBar){
-    progressBar.style.width="20%";
-  }  try{
-    const bucket="Videos";
-
-    const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-
-    const path=`${currentUser.id}/${crypto.randomUUID()}-${safeName}`;
-
-    const up=await sb.storage
+    const videoUrl=sb.storage
       .from(bucket)
-      .upload(path,file,{
-        contentType:file.type,
-        upsert:false
+      .getPublicUrl(path)
+      .data.publicUrl;
+
+    const {error}=await sb
+      .from("videos")
+      .insert({
+        user_id:currentUser.id,
+        title:title,
+        description:desc,
+        video_url:videoUrl,
+        storage_path:path,
+        thumbnail_url:null,
+        visibility:visibility,
+        is_short:uploadMode==="short",
+        allow_comments:$("allowComments")?.checked ?? true
       });
+
+    if(error) throw error;
+
+    if(progressBar) progressBar.style.width="100%";
+
+    toast("Published to Nockage!");
+
+    e.target.reset();
+
+    setTimeout(()=>{
+      location.hash="#studio";
+    },500);
+
+  }catch(err){
+    console.error("Nockage upload error:",err);
+    toast(err.message||"Upload failed.");
+  }finally{
+    setTimeout(()=>{
+      if(progress) progress.style.display="none";
+    },700);
+  }
+});
+
+async function route(){
 
     if(up.error) throw up.error;
 
