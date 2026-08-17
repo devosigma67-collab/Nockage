@@ -1,8 +1,8 @@
 /* Nockage real backend client.
    Replace the two values below with your Supabase project's public browser credentials. */
 const NOCKAGE_CONFIG = {
-  SUPABASE_URL: "PASTE_YOUR_SUPABASE_URL_HERE",
-  SUPABASE_ANON_KEY: "PASTE_YOUR_SUPABASE_ANON_KEY_HERE"
+  SUPABASE_URL: "https://ljveziwuxbiajxtguppy.supabase.co/rest/v1/",
+  SUPABASE_ANON_KEY: "sb_publishable_pF6Fs7rvL1C-ib1mg_MRxg_qWuX8Int"
 };
 
 const ready = !NOCKAGE_CONFIG.SUPABASE_URL.startsWith("PASTE_") && !NOCKAGE_CONFIG.SUPABASE_ANON_KEY.startsWith("PASTE_");
