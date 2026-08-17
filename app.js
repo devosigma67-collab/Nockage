@@ -107,12 +107,12 @@ $("uploadForm").onsubmit=async e=>{
   const title=$("videoTitle").value.trim();const desc=$("videoDescription").value.trim();const visibility=$("visibility").value;
   $("uploadProgress").style.display="block";$("uploadProgress span").style.width="20%";
   try{
-    const bucket=visibility==="private"?"private-videos":"public-videos";
+    const bucket="Videos";
     const path=`${currentUser.id}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`;
     const up=await sb.storage.from(bucket).upload(path,file,{contentType:file.type,upsert:false});if(up.error)throw up.error;
     $("uploadProgress span").style.width="65%";
     let videoUrl="";
-    if(bucket==="public-videos")videoUrl=sb.storage.from(bucket).getPublicUrl(path).data.publicUrl;
+    videoUrl=sb.storage.from(bucket).getPublicUrl(path).data.publicUrl;
     else videoUrl=path;
     let thumbUrl=null;const tf=$("thumbFile").files[0];if(tf){const tp=`${currentUser.id}/${crypto.randomUUID()}-${tf.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`;const tu=await sb.storage.from("thumbnails").upload(tp,tf,{contentType:tf.type});if(!tu.error)thumbUrl=sb.storage.from("thumbnails").getPublicUrl(tp).data.publicUrl}
     const {error}=await sb.from("videos").insert({user_id:currentUser.id,title,description:desc,video_url:videoUrl,storage_path:path,thumbnail_url:thumbUrl,visibility,is_short:uploadMode==="short",allow_comments:$("allowComments").checked});
