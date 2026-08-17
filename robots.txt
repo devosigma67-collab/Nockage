@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: REPLACE_WITH_YOUR_PUBLIC_URL/sitemap.xml
