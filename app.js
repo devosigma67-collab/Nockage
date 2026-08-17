@@ -15,7 +15,7 @@ function fmt(n){n=Number(n||0);return n>=1e9?(n/1e9).toFixed(1).replace(/\.0$/,"
 function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]))}
 function page(id){document.querySelectorAll(".page").forEach(x=>x.classList.remove("active"));$(id)?.classList.add("active");window.scrollTo(0,0)}
 function requireConfig(){if(!ready){toast("Finish the Supabase setup first.");return false}return true}
-function usernameEmail(u){return u.toLowerCase()+"@accounts.nockage.invalid"}
+
 
 async function boot(){
   if(!ready){toast("Nockage is ready to connect — add your Supabase keys in app.js.");}
@@ -39,10 +39,10 @@ function renderAccount(){
 function openAuth(signup){$("authModal").classList.remove("hidden");$("authTitle").textContent=signup?"Create your Nockage account":"Log in to Nockage";$("authSubmit").textContent=signup?"Create account":"Log in";$("switchAuth").textContent=signup?"Already have an account? Log in":"New to Nockage? Create account";$("authHint").textContent="";$("authForm").dataset.signup=signup?"1":"0"}
 $("closeAuth").onclick=()=> $("authModal").classList.add("hidden");
 $("switchAuth").onclick=()=>openAuth($("authForm").dataset.signup!=="1");
-$("authForm").onsubmit=async e=>{e.preventDefault();if(!requireConfig())return;const u=$("authUsername").value.trim(),p=$("authPassword").value;const signup=$("authForm").dataset.signup==="1";if(!/^[A-Za-z0-9_]{3,24}$/.test(u))return toast("Username must be 3–24 letters, numbers or _");
+$("authForm").onsubmit=async e=>{e.preventDefault();if(!requireConfig())return;const u=$("authUsername").value.trim(),email=$("authEmail").value.trim(),p=$("authPassword").value;const signup=$("authForm").dataset.signup==="1";if(!/^[A-Za-z0-9_]{3,24}$/.test(u))return toast("Username must be 3–24 letters, numbers or _");
   $("authSubmit").disabled=true;
   try{
-    const email=usernameEmail(u);
+    
     if(signup){
       const {data,error}=await sb.auth.signUp({email,password:p,options:{data:{username:u}}});
       if(error)throw error;
