@@ -103,23 +103,91 @@ document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>setMode(b.dataset.mo
 $("videoFile").onchange=e=>{const f=e.target.files[0];$("fileInfo").textContent=f?`${f.name} · ${(f.size/1048576).toFixed(1)} MB`:"Maximum 50 MB on the free backend."}
 
 $("uploadForm").onsubmit=async e=>{
-  e.preventDefault();if(!currentUser||!ready)return openAuth(false);const file=$("videoFile").files[0];if(!file)return; if(file.size>50*1024*1024)return toast("This free setup accepts videos up to 50 MB.");
-  const title=$("videoTitle").value.trim();const desc=$("videoDescription").value.trim();const visibility=$("visibility").value;
-  $("uploadProgress").style.display="block";$("uploadProgress span").style.width="20%";
+  e.preventDefault();
+
+  if(!currentUser || !ready){
+    return openAuth(false);
+  }
+
+  const file=$("videoFile").files[0];
+
+  if(!file){
+    return toast("Choose a video first.");
+  }
+
+  if(file.size>50*1024*1024){
+    return toast("This free setup accepts videos up to 50 MB.");
+  }
+
+  const title=$("videoTitle").value.trim();
+  const desc=$("videoDescription").value.trim();
+  const visibility=$("visibility").value;
+
+  if(!title){
+    return toast("Enter a video title.");
+  }
+
+  $("uploadProgress").style.display="block";
+  $("uploadProgress span").style.width="20%";
+
   try{
     const bucket="Videos";
-    const path=`${currentUser.id}/${crypto.randomUUID()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`;
-    const up=await sb.storage.from(bucket).upload(path,file,{contentType:file.type,upsert:false});if(up.error)throw up.error;
-    $("uploadProgress span").style.width="65%";
-    let videoUrl="";
-    videoUrl=sb.storage.from(bucket).getPublicUrl(path).data.publicUrl;
-    else videoUrl=path;
-    let thumbUrl=null;const tf=$("thumbFile").files[0];if(tf){const tp=`${currentUser.id}/${crypto.randomUUID()}-${tf.name.replace(/[^a-zA-Z0-9._-]/g,"_")}`;const tu=await sb.storage.from("thumbnails").upload(tp,tf,{contentType:tf.type});if(!tu.error)thumbUrl=sb.storage.from("thumbnails").getPublicUrl(tp).data.publicUrl}
-    const {error}=await sb.from("videos").insert({user_id:currentUser.id,title,description:desc,video_url:videoUrl,storage_path:path,thumbnail_url:thumbUrl,visibility,is_short:uploadMode==="short",allow_comments:$("allowComments").checked});
-    if(error)throw error;$("uploadProgress span").style.width="100%";toast("Published to Nockage!");e.target.reset();location.hash="#studio";
-  }catch(err){toast(err.message||"Upload failed.");console.error(err)}finally{setTimeout(()=>$("uploadProgress").style.display="none",500)}
-};
 
+    const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+
+    const path=`${currentUser.id}/${crypto.randomUUID()}-${safeName}`;
+
+    const up=await sb.storage
+      .from(bucket)
+      .upload(path,file,{
+        contentType:file.type,
+        upsert:false
+      });
+
+    if(up.error) throw up.error;
+
+    $("uploadProgress span").style.width="70%";
+
+    const videoUrl=sb.storage
+      .from(bucket)
+      .getPublicUrl(path)
+      .data.publicUrl;
+
+    const {error}=await sb
+      .from("videos")
+      .insert({
+        user_id:currentUser.id,
+        title:title,
+        description:desc,
+        video_url:videoUrl,
+        storage_path:path,
+        thumbnail_url:null,
+        visibility:visibility,
+        is_short:uploadMode==="short",
+        allow_comments:$("allowComments").checked
+      });
+
+    if(error) throw error;
+
+    $("uploadProgress span").style.width="100%";
+
+    toast("Published to Nockage!");
+
+    e.target.reset();
+
+    setTimeout(()=>{
+      location.hash="#studio";
+    },500);
+
+  }catch(err){
+    console.error("Nockage upload error:",err);
+    toast(err.message||"Upload failed.");
+  }finally{
+    setTimeout(()=>{
+      $("uploadProgress").style.display="none";
+    },700);
+  }
+};
 async function route(){
   const parts=decodeURIComponent(location.hash.slice(1)).split("/");const r=parts[0]||"home";
   if(r==="home"){page("home");loadHome()}else if(r==="shorts"){page("shorts");loadShorts()}else if(r==="subscriptions"){page("subscriptions");loadSubs()}else if(r==="search"){page("search");search(parts.slice(1).join("/")||"")}else if(r==="watch"){page("watch");showWatch(parts[1])}else if(r==="studio"){page("studio");loadStudio()}else if(r==="profile"){page("profile");showProfile(parts[1])}else if(r==="upload"){page("upload");if(!currentUser)openAuth(false)}else if(r==="settings"){page("settings");$("settingsName").textContent=profile?.username||"—"}else{page("home");loadHome()}
