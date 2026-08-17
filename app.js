@@ -102,14 +102,14 @@ function setMode(m){uploadMode=m;document.querySelectorAll(".mode").forEach(b=>b
 document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
 $("videoFile").onchange=e=>{const f=e.target.files[0];$("fileInfo").textContent=f?`${f.name} · ${(f.size/1048576).toFixed(1)} MB`:"Maximum 50 MB on the free backend."}
 
-$("uploadForm").onsubmit=async e=>{
+$("uploadForm")?.addEventListener("submit", async e=>{
   e.preventDefault();
 
   if(!currentUser || !ready){
     return openAuth(false);
   }
 
-  const file=$("videoFile").files[0];
+  const file=$("videoFile")?.files?.[0];
 
   if(!file){
     return toast("Choose a video first.");
@@ -119,18 +119,24 @@ $("uploadForm").onsubmit=async e=>{
     return toast("This free setup accepts videos up to 50 MB.");
   }
 
-  const title=$("videoTitle").value.trim();
-  const desc=$("videoDescription").value.trim();
-  const visibility=$("visibility").value;
+  const title=$("videoTitle")?.value.trim() || "";
+  const desc=$("videoDescription")?.value.trim() || "";
+  const visibility=$("visibility")?.value || "public";
 
   if(!title){
     return toast("Enter a video title.");
   }
 
-  $("uploadProgress").style.display="block";
-  $("uploadProgress span").style.width="20%";
+  const progress=$("uploadProgress");
+  const progressBar=progress?.querySelector("span");
 
-  try{
+  if(progress){
+    progress.style.display="block";
+  }
+
+  if(progressBar){
+    progressBar.style.width="20%";
+  }  try{
     const bucket="Videos";
 
     const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_");
