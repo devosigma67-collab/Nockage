@@ -1,20 +1,18 @@
-/* Nockage real backend client.
-   Replace the two values below with your Supabase project's public browser credentials. */
+// ===============================
+// NOCKAGE SUPABASE CONFIG
+// ===============================
+
 const NOCKAGE_CONFIG = {
   SUPABASE_URL: "https://ljveziwuxbiajxtguppy.supabase.co",
   SUPABASE_ANON_KEY: "sb_publishable_pF6Fs7rvL1C-ib1mg_MRxg_qWuX8Int"
 };
 
-// ===============================
-// NOCKAGE APP.JS
-// ===============================
-
 const ready =
-  typeof NOCKAGE_CONFIG !== "undefined" &&
+  typeof supabase !== "undefined" &&
   NOCKAGE_CONFIG.SUPABASE_URL &&
   NOCKAGE_CONFIG.SUPABASE_ANON_KEY &&
-  !NOCKAGE_CONFIG.SUPABASE_URL.startsWith("PASTE_") &&
-  !NOCKAGE_CONFIG.SUPABASE_ANON_KEY.startsWith("PASTE_");
+  !NOCKAGE_CONFIG.SUPABASE_URL.startsWith("YOUR_") &&
+  !NOCKAGE_CONFIG.SUPABASE_ANON_KEY.startsWith("YOUR_");
 
 const sb = ready
   ? supabase.createClient(
@@ -76,13 +74,12 @@ function page(id) {
   });
 
   $(id)?.classList.add("active");
-
   window.scrollTo(0, 0);
 }
 
 function requireConfig() {
-  if (!ready) {
-    toast("Finish the Supabase setup first.");
+  if (!ready || !sb) {
+    toast("Supabase is not configured.");
     return false;
   }
 
@@ -94,23 +91,33 @@ function requireConfig() {
 // ===============================
 
 async function boot() {
+  // IMPORTANT:
+  // Set up buttons FIRST so the UI still works
+  // even if Supabase has a connection problem.
+  setupButtons();
+
   if (!ready) {
     console.warn("Nockage: Supabase is not configured.");
+    route();
+    return;
   }
 
-  if (ready) {
+  try {
     const {
       data: { session }
     } = await sb.auth.getSession();
 
     await setUser(session?.user || null);
 
-    sb.auth.onAuthStateChange(async (_event, session) => {
-      await setUser(session?.user || null);
+    sb.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
     });
+
+  } catch (err) {
+    console.error("Supabase startup error:", err);
+    toast("Supabase connection failed.");
   }
 
-  setupButtons();
   route();
 }
 
@@ -119,14 +126,18 @@ async function setUser(user) {
   profile = null;
 
   if (user && ready) {
-    const { data, error } = await sb
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .maybeSingle();
+    try {
+      const { data, error } = await sb
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .maybeSingle();
 
-    if (!error) {
-      profile = data || null;
+      if (!error) {
+        profile = data || null;
+      }
+    } catch (err) {
+      console.error("Profile error:", err);
     }
   }
 
@@ -155,51 +166,91 @@ function renderAccount() {
 
   } else {
     area.innerHTML = `
-      <button class="ghost" id="loginBtn">
+      <button type="button" class="ghost" id="loginBtn">
         Log in
       </button>
 
-      <button class="primary" id="signupBtn">
+      <button type="button" class="primary" id="signupBtn">
         Create account
       </button>
     `;
 
-    $("loginBtn")?.addEventListener("click", () => openAuth(false));
-    $("signupBtn")?.addEventListener("click", () => openAuth(true));
+    $("loginBtn")?.addEventListener(
+      "click",
+      () => openAuth(false)
+    );
+
+    $("signupBtn")?.addEventListener(
+      "click",
+      () => openAuth(true)
+    );
   }
 }
 
-function openAuth(signup) {
+function openAuth(signup = false) {
   const modal = $("authModal");
 
-  if (!modal) return;
+  if (!modal) {
+    console.error("authModal was not found.");
+    return;
+  }
 
   modal.classList.remove("hidden");
 
-  $("authTitle").textContent =
-    signup
-      ? "Create your Nockage account"
-      : "Log in to Nockage";
+  if ($("authTitle")) {
+    $("authTitle").textContent =
+      signup
+        ? "Create your Nockage account"
+        : "Log in to Nockage";
+  }
 
-  $("authSubmit").textContent =
-    signup
-      ? "Create account"
-      : "Log in";
+  if ($("authSubmit")) {
+    $("authSubmit").textContent =
+      signup
+        ? "Create account"
+        : "Log in";
+  }
 
-  $("switchAuth").textContent =
-    signup
-      ? "Already have an account? Log in"
-      : "New to Nockage? Create account";
+  if ($("switchAuth")) {
+    $("switchAuth").textContent =
+      signup
+        ? "Already have an account? Log in"
+        : "New to Nockage? Create account";
+  }
 
-  $("authHint").textContent = "";
+  if ($("authHint")) {
+    $("authHint").textContent = "";
+  }
 
-  $("authForm").dataset.signup = signup ? "1" : "0";
+  if ($("authForm")) {
+    $("authForm").dataset.signup =
+      signup ? "1" : "0";
+  }
+
+  // Username is only needed when creating an account.
+  const usernameInput = $("authUsername");
+
+  if (usernameInput) {
+    usernameInput.style.display =
+      signup ? "" : "none";
+
+    usernameInput.required = signup;
+  }
 }
 
 async function logout() {
-  if (ready) {
-    await sb.auth.signOut();
+  try {
+    if (ready) {
+      await sb.auth.signOut();
+    }
+  } catch (err) {
+    console.error(err);
   }
+
+  currentUser = null;
+  profile = null;
+
+  renderAccount();
 
   location.hash = "#home";
 
@@ -212,92 +263,123 @@ function setupAuth() {
   });
 
   $("switchAuth")?.addEventListener("click", () => {
-    openAuth($("authForm")?.dataset.signup !== "1");
-  });
-
-  $("authForm")?.addEventListener("submit", async e => {
-    e.preventDefault();
-
-    if (!requireConfig()) return;
-
-    const username =
-      $("authUsername")?.value.trim() || "";
-
-    const email =
-      $("authEmail")?.value.trim() || "";
-
-    const password =
-      $("authPassword")?.value || "";
-
-    const signup =
+    const currentlySignup =
       $("authForm")?.dataset.signup === "1";
 
-    if (
-      !/^[A-Za-z0-9_]{3,24}$/.test(username)
-    ) {
-      return toast(
-        "Username must be 3–24 letters, numbers or _"
-      );
-    }
+    openAuth(!currentlySignup);
+  });
 
-    $("authSubmit").disabled = true;
+  $("authForm")?.addEventListener(
+    "submit",
+    async e => {
+      e.preventDefault();
 
-    try {
-      if (signup) {
-        const { data, error } =
-          await sb.auth.signUp({
-            email,
-            password,
-            options: {
-              data: {
-                username
-              }
-            }
-          });
+      if (!requireConfig()) return;
 
-        if (error) throw error;
+      const email =
+        $("authEmail")?.value.trim() || "";
 
-        if (data.user) {
-          const { error: profileError } =
-            await sb.from("profiles").upsert({
-              id: data.user.id,
-              username,
-              display_name: username
-            });
+      const password =
+        $("authPassword")?.value || "";
 
-          if (profileError) {
-            console.error(profileError);
-          }
-        }
+      const signup =
+        $("authForm")?.dataset.signup === "1";
 
-        toast("Account created!");
+      const username =
+        $("authUsername")?.value.trim() || "";
 
-        $("authModal")?.classList.add("hidden");
-
-      } else {
-        const { error } =
-          await sb.auth.signInWithPassword({
-            email,
-            password
-          });
-
-        if (error) throw error;
-
-        toast("Welcome back!");
-
-        $("authModal")?.classList.add("hidden");
+      if (!email) {
+        return toast("Enter your email.");
       }
 
-    } catch (err) {
-      console.error(err);
+      if (!password) {
+        return toast("Enter your password.");
+      }
 
-      $("authHint").textContent =
-        err.message || "Something went wrong.";
+      // Username is ONLY checked during signup.
+      if (signup) {
+        if (!/^[A-Za-z0-9_]{3,24}$/.test(username)) {
+          return toast(
+            "Username must be 3–24 letters, numbers or _"
+          );
+        }
+      }
 
-    } finally {
-      $("authSubmit").disabled = false;
+      const submit = $("authSubmit");
+
+      if (submit) {
+        submit.disabled = true;
+      }
+
+      try {
+        if (signup) {
+          const { data, error } =
+            await sb.auth.signUp({
+              email,
+              password,
+              options: {
+                data: {
+                  username
+                }
+              }
+            });
+
+          if (error) throw error;
+
+          if (data?.user) {
+            const { error: profileError } =
+              await sb
+                .from("profiles")
+                .upsert({
+                  id: data.user.id,
+                  username,
+                  display_name: username
+                });
+
+            if (profileError) {
+              console.error(
+                "Profile creation error:",
+                profileError
+              );
+            }
+          }
+
+          toast("Account created!");
+
+          $("authModal")?.classList.add("hidden");
+
+        } else {
+          const { data, error } =
+            await sb.auth.signInWithPassword({
+              email,
+              password
+            });
+
+          if (error) throw error;
+
+          await setUser(data?.user || null);
+
+          toast("Welcome back!");
+
+          $("authModal")?.classList.add("hidden");
+        }
+
+      } catch (err) {
+        console.error("Auth error:", err);
+
+        if ($("authHint")) {
+          $("authHint").textContent =
+            err.message ||
+            "Something went wrong.";
+        }
+
+      } finally {
+        if (submit) {
+          submit.disabled = false;
+        }
+      }
     }
-  });
+  );
 }
 
 // ===============================
@@ -310,7 +392,6 @@ async function queryVideos({
   search = null,
   limit = 30
 } = {}) {
-
   if (!ready) return [];
 
   let q = sb
@@ -352,7 +433,11 @@ async function queryVideos({
   const { data, error } = await q;
 
   if (error) {
-    console.error("Video query error:", error);
+    console.error(
+      "Video query error:",
+      error
+    );
+
     return [];
   }
 
@@ -360,7 +445,8 @@ async function queryVideos({
 }
 
 function videoCard(v, short = false) {
-  const thumb = v.thumbnail_url || "";
+  const thumb =
+    v.thumbnail_url || "";
 
   return `
     <article
@@ -370,13 +456,17 @@ function videoCard(v, short = false) {
 
       ${
         thumb
-          ? `<img
+          ? `
+            <img
               class="thumb"
               src="${esc(thumb)}"
               alt=""
               loading="lazy"
-            >`
-          : `<div class="thumb"></div>`
+            >
+          `
+          : `
+            <div class="thumb"></div>
+          `
       }
 
       <div class="cardBody">
@@ -403,11 +493,14 @@ function videoCard(v, short = false) {
 async function loadHome() {
   if (!$("homeGrid")) return;
 
-  const videos = await queryVideos();
+  const videos =
+    await queryVideos();
 
   $("homeGrid").innerHTML =
     videos.length
-      ? videos.map(v => videoCard(v)).join("")
+      ? videos
+          .map(v => videoCard(v))
+          .join("")
       : `
         <div class="empty">
           No public videos yet.
@@ -433,7 +526,9 @@ async function loadShorts() {
 
   $("shortsGrid").innerHTML =
     videos.length
-      ? videos.map(v => videoCard(v, true)).join("")
+      ? videos
+          .map(v => videoCard(v, true))
+          .join("")
       : `
         <div class="empty">
           No Shorts yet.
@@ -443,8 +538,12 @@ async function loadShorts() {
 
 async function loadSubs() {
   if (!currentUser) {
-    if ($("subsGrid")) $("subsGrid").innerHTML = "";
-    if ($("subsEmpty")) $("subsEmpty").style.display = "block";
+    if ($("subsGrid"))
+      $("subsGrid").innerHTML = "";
+
+    if ($("subsEmpty"))
+      $("subsEmpty").style.display = "block";
+
     return;
   }
 
@@ -452,7 +551,10 @@ async function loadSubs() {
     await sb
       .from("subscriptions")
       .select("creator_id")
-      .eq("subscriber_id", currentUser.id);
+      .eq(
+        "subscriber_id",
+        currentUser.id
+      );
 
   if (error) {
     console.error(error);
@@ -460,20 +562,24 @@ async function loadSubs() {
   }
 
   const ids =
-    (data || []).map(x => x.creator_id);
+    (data || []).map(
+      x => x.creator_id
+    );
 
   if (!ids.length) {
     $("subsGrid").innerHTML = "";
 
     if ($("subsEmpty")) {
-      $("subsEmpty").style.display = "block";
+      $("subsEmpty").style.display =
+        "block";
     }
 
     return;
   }
 
   if ($("subsEmpty")) {
-    $("subsEmpty").style.display = "none";
+    $("subsEmpty").style.display =
+      "none";
   }
 
   let all = [];
@@ -489,10 +595,13 @@ async function loadSubs() {
 
   $("subsGrid").innerHTML =
     all.length
-      ? all.map(v => videoCard(v)).join("")
+      ? all
+          .map(v => videoCard(v))
+          .join("")
       : `
         <div class="empty">
-          Your subscriptions have no public videos yet.
+          Your subscriptions have no
+          public videos yet.
         </div>
       `;
 }
@@ -501,7 +610,8 @@ async function searchVideos(q) {
   page("search");
 
   if ($("searchLabel")) {
-    $("searchLabel").textContent = q;
+    $("searchLabel").textContent =
+      q;
   }
 
   const videos =
@@ -512,7 +622,9 @@ async function searchVideos(q) {
 
   $("searchGrid").innerHTML =
     videos.length
-      ? videos.map(v => videoCard(v)).join("")
+      ? videos
+          .map(v => videoCard(v))
+          .join("")
       : `
         <div class="empty">
           No results.
@@ -541,20 +653,25 @@ async function showWatch(id) {
       .maybeSingle();
 
   if (error || !video) {
-    return toast("Video not found");
+    return toast(
+      "Video not found"
+    );
   }
 
   if (
     video.visibility === "private" &&
     video.user_id !== currentUser?.id
   ) {
-    return toast("This video is private");
+    return toast(
+      "This video is private"
+    );
   }
 
   await sb
     .from("videos")
     .update({
-      views: (video.views || 0) + 1
+      views:
+        (video.views || 0) + 1
     })
     .eq("id", id);
 
@@ -567,7 +684,10 @@ async function showWatch(id) {
         .from("likes")
         .select("video_id")
         .eq("video_id", id)
-        .eq("user_id", currentUser.id)
+        .eq(
+          "user_id",
+          currentUser.id
+        )
         .maybeSingle();
 
     liked = !!like;
@@ -576,8 +696,14 @@ async function showWatch(id) {
       await sb
         .from("subscriptions")
         .select("creator_id")
-        .eq("creator_id", video.user_id)
-        .eq("subscriber_id", currentUser.id)
+        .eq(
+          "creator_id",
+          video.user_id
+        )
+        .eq(
+          "subscriber_id",
+          currentUser.id
+        )
         .maybeSingle();
 
     subscribed = !!sub;
@@ -600,6 +726,8 @@ async function showWatch(id) {
         ascending: false
       })
       .limit(50);
+
+  if (!$("watchContent")) return;
 
   $("watchContent").innerHTML = `
     <div class="watch">
@@ -630,22 +758,44 @@ async function showWatch(id) {
 
         <div class="actions">
 
-          <button class="ghost" id="likeBtn">
-            ${liked ? "♥ Liked" : "♡ Like"}
+          <button
+            type="button"
+            class="ghost"
+            id="likeBtn"
+          >
+            ${
+              liked
+                ? "♥ Liked"
+                : "♡ Like"
+            }
           </button>
 
-          <button class="ghost" id="repostBtn">
+          <button
+            type="button"
+            class="ghost"
+            id="repostBtn"
+          >
             ↻ Repost
           </button>
 
-          <button class="primary" id="subBtn">
-            ${subscribed ? "Subscribed" : "Subscribe"}
+          <button
+            type="button"
+            class="primary"
+            id="subBtn"
+          >
+            ${
+              subscribed
+                ? "Subscribed"
+                : "Subscribe"
+            }
           </button>
 
         </div>
 
         <p>
-          ${esc(video.description || "")}
+          ${esc(
+            video.description || ""
+          )}
         </p>
 
       </div>
@@ -667,6 +817,7 @@ async function showWatch(id) {
           >
 
           <button
+            type="submit"
             class="primary wide"
             ${currentUser ? "" : "disabled"}
           >
@@ -678,23 +829,25 @@ async function showWatch(id) {
         <div id="comments">
 
           ${
-            (comments || []).map(c => `
-              <div class="comment">
+            (comments || [])
+              .map(c => `
+                <div class="comment">
 
-                <b>
-                  ${esc(
-                    c.profiles?.display_name ||
-                    c.profiles?.username ||
-                    "User"
-                  )}
-                </b>
+                  <b>
+                    ${esc(
+                      c.profiles?.display_name ||
+                      c.profiles?.username ||
+                      "User"
+                    )}
+                  </b>
 
-                <div>
-                  ${esc(c.text)}
+                  <div>
+                    ${esc(c.text)}
+                  </div>
+
                 </div>
-
-              </div>
-            `).join("") ||
+              `)
+              .join("") ||
             "<p class='muted'>No comments yet.</p>"
           }
 
@@ -706,10 +859,16 @@ async function showWatch(id) {
   `;
 
   $("likeBtn").onclick =
-    () => toggleLike(id, liked);
+    () => toggleLike(
+      id,
+      liked
+    );
 
   $("subBtn").onclick =
-    () => toggleSub(video.user_id, subscribed);
+    () => toggleSub(
+      video.user_id,
+      subscribed
+    );
 
   $("repostBtn").onclick =
     () => repost(id);
@@ -723,7 +882,9 @@ async function showWatch(id) {
       }
 
       const text =
-        $("commentInput").value.trim();
+        $("commentInput")
+          ?.value
+          .trim() || "";
 
       if (!text) return;
 
@@ -732,7 +893,8 @@ async function showWatch(id) {
           .from("comments")
           .insert({
             video_id: id,
-            user_id: currentUser.id,
+            user_id:
+              currentUser.id,
             text
           });
 
@@ -744,7 +906,10 @@ async function showWatch(id) {
     };
 }
 
-async function toggleLike(id, wasLiked) {
+async function toggleLike(
+  id,
+  wasLiked
+) {
   if (!currentUser) {
     return openAuth(false);
   }
@@ -754,45 +919,64 @@ async function toggleLike(id, wasLiked) {
       .from("likes")
       .delete()
       .eq("video_id", id)
-      .eq("user_id", currentUser.id);
+      .eq(
+        "user_id",
+        currentUser.id
+      );
   } else {
     await sb
       .from("likes")
       .insert({
         video_id: id,
-        user_id: currentUser.id
+        user_id:
+          currentUser.id
       });
   }
 
   showWatch(id);
 }
 
-async function toggleSub(creator, wasSubscribed) {
+async function toggleSub(
+  creator,
+  wasSubscribed
+) {
   if (!currentUser) {
     return openAuth(false);
   }
 
-  if (creator === currentUser.id) {
-    return toast("You can't subscribe to yourself.");
+  if (
+    creator === currentUser.id
+  ) {
+    return toast(
+      "You can't subscribe to yourself."
+    );
   }
 
   if (wasSubscribed) {
     await sb
       .from("subscriptions")
       .delete()
-      .eq("creator_id", creator)
-      .eq("subscriber_id", currentUser.id);
+      .eq(
+        "creator_id",
+        creator
+      )
+      .eq(
+        "subscriber_id",
+        currentUser.id
+      );
   } else {
     await sb
       .from("subscriptions")
       .insert({
         creator_id: creator,
-        subscriber_id: currentUser.id
+        subscriber_id:
+          currentUser.id
       });
   }
 
   const id =
-    location.hash.split("/")[1];
+    location.hash
+      .split("/")[1];
 
   showWatch(id);
 }
@@ -807,7 +991,8 @@ async function repost(id) {
       .from("reposts")
       .upsert({
         video_id: id,
-        user_id: currentUser.id
+        user_id:
+          currentUser.id
       });
 
   toast(
@@ -843,7 +1028,10 @@ async function showProfile(id) {
         count: "exact",
         head: true
       })
-      .eq("creator_id", id);
+      .eq(
+        "creator_id",
+        id
+      );
 
   const mine =
     currentUser?.id === id;
@@ -855,12 +1043,20 @@ async function showProfile(id) {
       await sb
         .from("subscriptions")
         .select("*")
-        .eq("creator_id", id)
-        .eq("subscriber_id", currentUser.id)
+        .eq(
+          "creator_id",
+          id
+        )
+        .eq(
+          "subscriber_id",
+          currentUser.id
+        )
         .maybeSingle();
 
     following = !!data;
   }
+
+  if (!$("profileContent")) return;
 
   $("profileContent").innerHTML = `
     <div class="profileHead">
@@ -885,9 +1081,13 @@ async function showProfile(id) {
         </h1>
 
         <div class="muted">
-          @${esc(p?.username || "")}
+          @${esc(
+            p?.username || ""
+          )}
           ·
-          ${fmt(subscribers)} subscribers
+          ${fmt(
+            subscribers
+          )} subscribers
         </div>
 
       </div>
@@ -895,12 +1095,16 @@ async function showProfile(id) {
       ${
         mine
           ? `
-            <a class="primary" href="#studio">
+            <a
+              class="primary"
+              href="#studio"
+            >
               Nockage Studio
             </a>
           `
           : `
             <button
+              type="button"
               class="primary"
               id="profileSub"
             >
@@ -920,20 +1124,27 @@ async function showProfile(id) {
     </div>
 
     <div class="videoGrid">
+
       ${
-        videos.map(v => videoCard(v)).join("") ||
+        videos
+          .map(v => videoCard(v))
+          .join("") ||
         `
           <div class="empty">
             No public videos yet.
           </div>
         `
       }
+
     </div>
   `;
 
   if (!mine) {
     $("profileSub").onclick =
-      () => toggleSub(id, following);
+      () => toggleSub(
+        id,
+        following
+      );
   }
 }
 
@@ -947,21 +1158,30 @@ async function loadStudio() {
     return openAuth(false);
   }
 
-  const { data } =
+  const { data, error } =
     await sb
       .from("videos")
       .select("*")
-      .eq("user_id", currentUser.id)
+      .eq(
+        "user_id",
+        currentUser.id
+      )
       .order("created_at", {
         ascending: false
       });
 
-  const videos = data || [];
+  if (error) {
+    console.error(error);
+  }
+
+  const videos =
+    data || [];
 
   const views =
     videos.reduce(
       (total, v) =>
-        total + Number(v.views || 0),
+        total +
+        Number(v.views || 0),
       0
     );
 
@@ -972,7 +1192,10 @@ async function loadStudio() {
         count: "exact",
         head: true
       })
-      .eq("creator_id", currentUser.id);
+      .eq(
+        "creator_id",
+        currentUser.id
+      );
 
   if ($("studioStats")) {
     $("studioStats").innerHTML = `
@@ -995,7 +1218,9 @@ async function loadStudio() {
         <span>Shorts</span>
         <b>
           ${fmt(
-            videos.filter(v => v.is_short).length
+            videos.filter(
+              v => v.is_short
+            ).length
           )}
         </b>
       </div>
@@ -1004,23 +1229,26 @@ async function loadStudio() {
 
   if ($("studioVideos")) {
     $("studioVideos").innerHTML =
-      videos.map(v => `
-        <div class="comment">
+      videos
+        .map(v => `
+          <div class="comment">
 
-          <b>
-            ${esc(v.title)}
-          </b>
+            <b>
+              ${esc(v.title)}
+            </b>
 
-          <span class="pill">
-            ${esc(v.visibility)}
-          </span>
+            <span class="pill">
+              ${esc(v.visibility)}
+            </span>
 
-          <span class="muted">
-            · ${fmt(v.views)} views
-          </span>
+            <span class="muted">
+              · ${fmt(v.views)}
+              views
+            </span>
 
-        </div>
-      `).join("") ||
+          </div>
+        `)
+        .join("") ||
       `
         <p class="muted">
           Upload your first video.
@@ -1036,7 +1264,8 @@ async function loadStudio() {
 function setMode(mode) {
   uploadMode = mode;
 
-  document.querySelectorAll(".mode")
+  document
+    .querySelectorAll(".mode")
     .forEach(button => {
       button.classList.toggle(
         "active",
@@ -1052,17 +1281,21 @@ function setMode(mode) {
   }
 
   if ($("videoFile")) {
-    $("videoFile").accept = "video/*";
+    $("videoFile").accept =
+      "video/*";
   }
 }
 
 function setupUpload() {
-
-  document.querySelectorAll(".mode")
+  document
+    .querySelectorAll(".mode")
     .forEach(button => {
       button.addEventListener(
         "click",
-        () => setMode(button.dataset.mode)
+        () =>
+          setMode(
+            button.dataset.mode
+          )
       );
     });
 
@@ -1084,7 +1317,6 @@ function setupUpload() {
   $("uploadForm")?.addEventListener(
     "submit",
     async e => {
-
       e.preventDefault();
 
       if (!currentUser || !ready) {
@@ -1092,26 +1324,38 @@ function setupUpload() {
       }
 
       const file =
-        $("videoFile")?.files?.[0];
+        $("videoFile")
+          ?.files?.[0];
 
       if (!file) {
-        return toast("Choose a video first.");
+        return toast(
+          "Choose a video first."
+        );
       }
 
-      if (file.size > 50 * 1024 * 1024) {
+      if (
+        file.size >
+        50 * 1024 * 1024
+      ) {
         return toast(
           "This free setup accepts videos up to 50 MB."
         );
       }
 
       const title =
-        $("videoTitle")?.value.trim() || "";
+        $("videoTitle")
+          ?.value
+          .trim() || "";
 
       const description =
-        $("videoDescription")?.value.trim() || "";
+        $("videoDescription")
+          ?.value
+          .trim() || "";
 
       const visibility =
-        $("visibility")?.value || "public";
+        $("visibility")
+          ?.value ||
+        "public";
 
       if (!title) {
         return toast(
@@ -1123,19 +1367,23 @@ function setupUpload() {
         $("uploadProgress");
 
       const progressBar =
-        progress?.querySelector("span");
+        progress?.querySelector(
+          "span"
+        );
 
       if (progress) {
-        progress.style.display = "block";
+        progress.style.display =
+          "block";
       }
 
       if (progressBar) {
-        progressBar.style.width = "20%";
+        progressBar.style.width =
+          "20%";
       }
 
       try {
-
-        const bucket = "Videos";
+        const bucket =
+          "Videos";
 
         const safeName =
           file.name.replace(
@@ -1154,7 +1402,8 @@ function setupUpload() {
               file,
               {
                 contentType:
-                  file.type || "video/mp4",
+                  file.type ||
+                  "video/mp4",
                 upsert: false
               }
             );
@@ -1164,13 +1413,16 @@ function setupUpload() {
         }
 
         if (progressBar) {
-          progressBar.style.width = "65%";
+          progressBar.style.width =
+            "65%";
         }
 
         const publicUrl =
           sb.storage
             .from(bucket)
-            .getPublicUrl(path)
+            .getPublicUrl(
+              path
+            )
             .data
             .publicUrl;
 
@@ -1178,17 +1430,24 @@ function setupUpload() {
           await sb
             .from("videos")
             .insert({
-              user_id: currentUser.id,
+              user_id:
+                currentUser.id,
               title,
               description,
-              video_url: publicUrl,
-              storage_path: path,
-              thumbnail_url: null,
+              video_url:
+                publicUrl,
+              storage_path:
+                path,
+              thumbnail_url:
+                null,
               visibility,
               is_short:
-                uploadMode === "short",
+                uploadMode ===
+                "short",
               allow_comments:
-                $("allowComments")?.checked ?? true
+                $("allowComments")
+                  ?.checked ??
+                true
             });
 
         if (error) {
@@ -1196,19 +1455,22 @@ function setupUpload() {
         }
 
         if (progressBar) {
-          progressBar.style.width = "100%";
+          progressBar.style.width =
+            "100%";
         }
 
-        toast("Published to Nockage!");
+        toast(
+          "Published to Nockage!"
+        );
 
         e.target.reset();
 
         setTimeout(() => {
-          location.hash = "#studio";
+          location.hash =
+            "#studio";
         }, 500);
 
       } catch (err) {
-
         console.error(
           "Nockage upload error:",
           err
@@ -1220,13 +1482,12 @@ function setupUpload() {
         );
 
       } finally {
-
         setTimeout(() => {
           if (progress) {
-            progress.style.display = "none";
+            progress.style.display =
+              "none";
           }
         }, 700);
-
       }
     }
   );
@@ -1237,7 +1498,6 @@ function setupUpload() {
 // ===============================
 
 function setupButtons() {
-
   setupAuth();
   setupUpload();
 
@@ -1250,7 +1510,8 @@ function setupButtons() {
     "click",
     () => {
       if (currentUser) {
-        location.hash = "#upload";
+        location.hash =
+          "#upload";
       } else {
         openAuth(false);
       }
@@ -1264,7 +1525,8 @@ function setupButtons() {
         return openAuth(false);
       }
 
-      location.hash = "#upload";
+      location.hash =
+        "#upload";
 
       setTimeout(() => {
         setMode("short");
@@ -1279,7 +1541,8 @@ function setupButtons() {
         return openAuth(false);
       }
 
-      location.hash = "#upload";
+      location.hash =
+        "#upload";
     }
   );
 
@@ -1287,7 +1550,9 @@ function setupButtons() {
     "click",
     () => {
       const q =
-        $("searchInput")?.value.trim();
+        $("searchInput")
+          ?.value
+          .trim();
 
       if (q) {
         location.hash =
@@ -1308,7 +1573,6 @@ function setupButtons() {
 }
 
 async function route() {
-
   const hash =
     location.hash.slice(1);
 
@@ -1322,45 +1586,56 @@ async function route() {
     parts[0] || "home";
 
   if (routeName === "home") {
-
     page("home");
     await loadHome();
 
   } else if (routeName === "shorts") {
-
     page("shorts");
     await loadShorts();
 
-  } else if (routeName === "subscriptions") {
-
+  } else if (
+    routeName ===
+    "subscriptions"
+  ) {
     page("subscriptions");
     await loadSubs();
 
-  } else if (routeName === "search") {
-
+  } else if (
+    routeName === "search"
+  ) {
     page("search");
 
     await searchVideos(
-      parts.slice(1).join("/") || ""
+      parts
+        .slice(1)
+        .join("/") || ""
     );
 
-  } else if (routeName === "watch") {
-
+  } else if (
+    routeName === "watch"
+  ) {
     page("watch");
-    await showWatch(parts[1]);
+    await showWatch(
+      parts[1]
+    );
 
-  } else if (routeName === "studio") {
-
+  } else if (
+    routeName === "studio"
+  ) {
     page("studio");
     await loadStudio();
 
-  } else if (routeName === "profile") {
-
+  } else if (
+    routeName === "profile"
+  ) {
     page("profile");
-    await showProfile(parts[1]);
+    await showProfile(
+      parts[1]
+    );
 
-  } else if (routeName === "upload") {
-
+  } else if (
+    routeName === "upload"
+  ) {
     if (!currentUser) {
       page("home");
       return openAuth(false);
@@ -1368,17 +1643,18 @@ async function route() {
 
     page("upload");
 
-  } else if (routeName === "settings") {
-
+  } else if (
+    routeName === "settings"
+  ) {
     page("settings");
 
     if ($("settingsName")) {
       $("settingsName").textContent =
-        profile?.username || "—";
+        profile?.username ||
+        "—";
     }
 
   } else {
-
     page("home");
     await loadHome();
   }
