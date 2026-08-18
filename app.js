@@ -195,39 +195,69 @@ function ensureShortsStyles() {
       width:100%;
       height:calc(100vh - 80px);
       min-height:600px;
+
       overflow-y:auto;
       overflow-x:hidden;
+
       scroll-snap-type:y mandatory;
+
       background:#000;
       border-radius:18px;
+
+      display:flex;
+      justify-content:center;
     }
 
     .nockageShortsFeed {
       width:100%;
+
       display:flex;
       flex-direction:column;
       align-items:center;
+
+      gap:20px;
+      padding:20px 0;
     }
 
+    /* =========================================
+       PC SHORT — YOUTUBE SHORTS 9:16
+    ========================================= */
+
     .nockageShortItem {
-      width:min(500px,100%);
-      height:calc(100vh - 80px);
-      min-height:600px;
+      width:min(430px,100%);
+
+      aspect-ratio:9 / 16;
+
+      height:auto;
+      max-height:calc(100vh - 100px);
+
       position:relative;
+
       overflow:hidden;
+
       background:#000;
-      scroll-snap-align:start;
+
+      border-radius:12px;
+
+      scroll-snap-align:center;
       scroll-snap-stop:always;
+
+      flex-shrink:0;
     }
 
     .nockageShortVideo,
     .nockageShortEmbed {
       position:absolute;
+
       inset:0;
+
       width:100%;
       height:100%;
+
       border:0;
+
       background:#000;
+
       object-fit:cover;
     }
 
@@ -237,8 +267,11 @@ function ensureShortsStyles() {
 
     .nockageShortShade {
       position:absolute;
+
       inset:0;
+
       pointer-events:none;
+
       background:
         linear-gradient(
           to bottom,
@@ -249,63 +282,90 @@ function ensureShortsStyles() {
 
     .nockageShortInfo {
       position:absolute;
+
       left:16px;
       right:76px;
       bottom:22px;
+
       color:#fff;
+
       z-index:3;
     }
 
     .nockageShortCreator {
       font-weight:800;
       font-size:16px;
+
       margin-bottom:8px;
     }
 
     .nockageShortTitle {
       font-size:18px;
       font-weight:700;
+
       line-height:1.3;
+
       margin-bottom:7px;
     }
 
     .nockageShortDescription {
       font-size:14px;
+
       color:rgba(255,255,255,.82);
+
       line-height:1.4;
+
       max-height:62px;
+
       overflow:hidden;
+
       margin-bottom:8px;
     }
 
     .nockageShortViews {
       font-size:13px;
+
       color:rgba(255,255,255,.7);
     }
 
     .nockageShortActions {
       position:absolute;
+
       right:12px;
       bottom:24px;
+
       z-index:5;
+
       display:flex;
+
       flex-direction:column;
+
       gap:12px;
+
       align-items:center;
     }
 
     .nockageShortAction {
       width:48px;
       height:48px;
+
       border:0;
+
       border-radius:50%;
+
       background:rgba(20,20,20,.72);
+
       color:#fff;
+
       cursor:pointer;
+
       font-size:21px;
+
       display:flex;
+
       align-items:center;
       justify-content:center;
+
       backdrop-filter:blur(8px);
     }
 
@@ -316,63 +376,114 @@ function ensureShortsStyles() {
     .nockageShortOpen {
       width:48px;
       height:48px;
+
       border-radius:50%;
+
       background:#fff;
+
       color:#111;
+
       display:flex;
+
       align-items:center;
       justify-content:center;
+
       text-decoration:none;
+
       font-weight:800;
+
       font-size:14px;
     }
 
     .nockageShortMute {
       position:absolute;
+
       top:18px;
       right:18px;
+
       z-index:5;
+
       width:42px;
       height:42px;
+
       border:0;
+
       border-radius:50%;
+
       background:rgba(0,0,0,.58);
+
       color:#fff;
+
       cursor:pointer;
+
       font-size:18px;
     }
 
     .nockageShortBadge {
       display:inline-block;
+
       padding:4px 8px;
+
       border-radius:999px;
+
       background:rgba(255,255,255,.16);
+
       color:#fff;
+
       font-size:11px;
+
       font-weight:900;
+
       margin-bottom:8px;
+
       backdrop-filter:blur(8px);
     }
 
     .nockageShortEmpty {
       min-height:500px;
+
       display:flex;
+
       align-items:center;
       justify-content:center;
+
       color:#888;
+
       padding:30px;
+
       text-align:center;
     }
 
+    /* =========================================
+       MOBILE — FULL SCREEN 9:16
+    ========================================= */
+
     @media(max-width:700px) {
+
       .nockageShortsPage {
         border-radius:0;
+
         height:calc(100vh - 60px);
+
+        min-height:500px;
+      }
+
+      .nockageShortsFeed {
+        padding:0;
+
+        gap:0;
       }
 
       .nockageShortItem {
+        width:100%;
+
         height:calc(100vh - 60px);
-        min-height:500px;
+
+        max-height:none;
+
+        aspect-ratio:auto;
+
+        border-radius:0;
       }
 
       .nockageShortInfo {
