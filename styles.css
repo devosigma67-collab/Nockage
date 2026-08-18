@@ -1,6 +1,7 @@
 /* =========================================================
-   NOCKAGE — ULTRA UI
-   Dark / Neon / Glass / Creator Platform
+   NOCKAGE — OG ULTRA UI
+   Original dark / neon / glass design
+   + NEW TikTok / YouTube-style Shorts UI
    ========================================================= */
 
 *,
@@ -165,6 +166,7 @@ video{
 
 .brand:hover img{
   transform:rotate(-3deg) scale(1.05);
+
   filter:
     drop-shadow(0 0 18px rgba(240,47,112,.55));
 }
@@ -598,7 +600,7 @@ video{
 }
 
 /* =========================================================
-   VIDEO GRIDS
+   NORMAL VIDEO GRIDS
    ========================================================= */
 
 .videoGrid{
@@ -608,6 +610,9 @@ video{
   gap:18px;
 }
 
+/*
+   Normal shorts cards outside the Shorts feed.
+*/
 .shortsGrid{
   display:grid;
   grid-template-columns:
@@ -616,7 +621,7 @@ video{
 }
 
 /* =========================================================
-   VIDEO CARD
+   NORMAL VIDEO CARD
    ========================================================= */
 
 .card{
@@ -718,6 +723,633 @@ video{
 }
 
 /* =========================================================
+   =========================================================
+   NOCKAGE SHORTS — FULL VERTICAL UI
+   TikTok / YouTube Shorts inspired
+   =========================================================
+   ========================================================= */
+
+/*
+   The Shorts page becomes a dedicated vertical-scrolling
+   experience.
+
+   Supported containers:
+   .shortsFeed
+   .shortsContainer
+   .shortsPage
+   .shorts-list
+*/
+
+.shortsFeed,
+.shortsContainer,
+.shortsPage,
+.shorts-list{
+
+  width:100%;
+  height:calc(100vh - 68px);
+
+  min-height:500px;
+
+  overflow-y:auto;
+  overflow-x:hidden;
+
+  scroll-snap-type:y mandatory;
+  scroll-behavior:smooth;
+
+  scrollbar-width:none;
+
+  background:#000;
+}
+
+.shortsFeed::-webkit-scrollbar,
+.shortsContainer::-webkit-scrollbar,
+.shortsPage::-webkit-scrollbar,
+.shorts-list::-webkit-scrollbar{
+  display:none;
+}
+
+/*
+   Individual Short.
+*/
+
+.short,
+.shortItem,
+.shortVideo,
+.short-feed-item,
+.shortsItem{
+
+  position:relative;
+
+  width:100%;
+  height:calc(100vh - 68px);
+
+  min-height:500px;
+
+  scroll-snap-align:start;
+  scroll-snap-stop:always;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  background:#000;
+
+  overflow:hidden;
+}
+
+/*
+   Video itself.
+*/
+
+.short video,
+.shortItem video,
+.shortVideo video,
+.short-feed-item video,
+.shortsItem video{
+
+  position:absolute;
+
+  inset:0;
+
+  width:100%;
+  height:100%;
+
+  object-fit:contain;
+
+  background:#000;
+
+  border-radius:0;
+
+  max-width:none;
+}
+
+/*
+   If the video element itself is the item.
+*/
+
+video.shortVideo,
+video.shortItem,
+video.short-feed-video{
+
+  width:100%;
+  height:100%;
+
+  object-fit:contain;
+
+  background:#000;
+}
+
+/*
+   Dark gradient over bottom of Short.
+*/
+
+.short::after,
+.shortItem::after,
+.short-feed-item::after,
+.shortsItem::after{
+
+  content:"";
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:42%;
+
+  pointer-events:none;
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(0,0,0,.82),
+      rgba(0,0,0,.40) 45%,
+      transparent
+    );
+
+  z-index:2;
+}
+
+/* =========================================================
+   SHORT INFO
+   ========================================================= */
+
+.shortInfo,
+.short-info,
+.shortMeta,
+.shortCaption{
+
+  position:absolute;
+
+  left:25px;
+  right:100px;
+  bottom:25px;
+
+  z-index:5;
+
+  max-width:650px;
+
+  text-align:left;
+
+  text-shadow:
+    0 2px 8px rgba(0,0,0,.7);
+}
+
+.shortInfo h3,
+.short-info h3,
+.shortMeta h3{
+
+  margin:0 0 8px;
+
+  font-size:20px;
+  line-height:1.2;
+
+  font-weight:900;
+
+  color:#fff;
+}
+
+.shortInfo p,
+.short-info p,
+.shortCaption p{
+
+  margin:0 0 10px;
+
+  color:#eee;
+
+  font-size:14px;
+
+  max-width:600px;
+}
+
+.shortCreator,
+.short-creator,
+.shortUser{
+
+  display:flex;
+  align-items:center;
+
+  gap:9px;
+
+  margin-bottom:10px;
+
+  font-weight:850;
+}
+
+.shortCreator img,
+.short-creator img,
+.shortUser img{
+
+  width:38px;
+  height:38px;
+
+  border-radius:50%;
+
+  object-fit:cover;
+
+  border:2px solid rgba(255,255,255,.85);
+
+  background:#222;
+}
+
+.shortCreator span,
+.short-creator span,
+.shortUser span{
+  color:#fff;
+}
+
+/* =========================================================
+   SHORT RIGHT ACTION BAR
+   ========================================================= */
+
+.shortActions,
+.short-actions,
+.shortSideActions,
+.shortButtons{
+
+  position:absolute;
+
+  right:18px;
+  bottom:24px;
+
+  z-index:10;
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  gap:15px;
+}
+
+.shortAction,
+.short-action,
+.shortButtons button,
+.shortActions button{
+
+  width:52px;
+  height:52px;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  border:0;
+
+  border-radius:50%;
+
+  background:rgba(20,20,25,.68);
+
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+
+  border:1px solid rgba(255,255,255,.14);
+
+  color:#fff;
+
+  font-size:23px;
+
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.35);
+
+  transition:
+    transform .16s ease,
+    background .16s ease,
+    border-color .16s ease;
+}
+
+.shortAction:hover,
+.short-action:hover,
+.shortButtons button:hover,
+.shortActions button:hover{
+
+  transform:scale(1.08);
+
+  background:rgba(240,47,112,.88);
+
+  border-color:#ff4b83;
+}
+
+.shortAction:active,
+.short-action:active,
+.shortButtons button:active,
+.shortActions button:active{
+
+  transform:scale(.91);
+}
+
+.shortAction span,
+.short-action span,
+.shortButtons button span,
+.shortActions button span{
+
+  position:absolute;
+
+  margin-top:78px;
+
+  font-size:12px;
+
+  color:#fff;
+
+  white-space:nowrap;
+
+  text-shadow:0 2px 7px #000;
+}
+
+/* =========================================================
+   SHORT COUNTERS
+   ========================================================= */
+
+.shortActionGroup,
+.short-action-group{
+
+  display:flex;
+
+  flex-direction:column;
+
+  align-items:center;
+
+  gap:5px;
+}
+
+.shortActionCount,
+.short-action-count{
+
+  color:#fff;
+
+  font-size:12px;
+
+  font-weight:750;
+
+  text-shadow:
+    0 2px 6px rgba(0,0,0,.8);
+}
+
+/* =========================================================
+   SHORT MUTE BUTTON
+   ========================================================= */
+
+.shortMute,
+.short-mute,
+.shortsMute{
+
+  position:absolute;
+
+  right:18px;
+  top:18px;
+
+  z-index:10;
+
+  width:45px;
+  height:45px;
+
+  border-radius:50%;
+
+  border:1px solid rgba(255,255,255,.15);
+
+  background:rgba(15,15,20,.68);
+
+  color:#fff;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  font-size:20px;
+
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+
+  transition:.18s ease;
+}
+
+.shortMute:hover,
+.short-mute:hover,
+.shortsMute:hover{
+
+  background:#f02f70;
+
+  transform:scale(1.08);
+}
+
+/* =========================================================
+   SHORT PROGRESS
+   ========================================================= */
+
+.shortProgress,
+.short-progress{
+
+  position:absolute;
+
+  left:0;
+  right:0;
+  bottom:0;
+
+  height:3px;
+
+  background:rgba(255,255,255,.18);
+
+  z-index:12;
+}
+
+.shortProgress span,
+.short-progress span{
+
+  display:block;
+
+  width:0;
+  height:100%;
+
+  background:#fff;
+
+  transition:width .1s linear;
+}
+
+/* =========================================================
+   SHORT TOP LABEL
+   ========================================================= */
+
+.shortsTopBar{
+
+  position:absolute;
+
+  top:16px;
+  left:18px;
+  right:18px;
+
+  z-index:10;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:space-between;
+
+  pointer-events:none;
+}
+
+.shortsTopBar > *{
+  pointer-events:auto;
+}
+
+.shortsTitle{
+
+  font-size:20px;
+
+  font-weight:950;
+
+  letter-spacing:.5px;
+
+  text-shadow:
+    0 2px 10px rgba(0,0,0,.8);
+}
+
+.shortsBadge{
+
+  display:inline-flex;
+
+  align-items:center;
+
+  padding:7px 11px;
+
+  border-radius:99px;
+
+  background:rgba(240,47,112,.88);
+
+  border:1px solid rgba(255,255,255,.18);
+
+  color:#fff;
+
+  font-size:12px;
+
+  font-weight:900;
+
+  box-shadow:
+    0 5px 20px rgba(0,0,0,.3);
+}
+
+/* =========================================================
+   SHORT DESKTOP SIZE
+   ========================================================= */
+
+@media(min-width:900px){
+
+  .short,
+  .shortItem,
+  .shortVideo,
+  .short-feed-item,
+  .shortsItem{
+
+    width:min(620px,100%);
+
+    margin:0 auto;
+
+    border-left:1px solid rgba(255,255,255,.04);
+    border-right:1px solid rgba(255,255,255,.04);
+  }
+
+  .shortsFeed,
+  .shortsContainer,
+  .shortsPage,
+  .shorts-list{
+
+    background:
+      radial-gradient(
+        circle at center,
+        #14151b,
+        #050507 70%
+      );
+  }
+}
+
+/* =========================================================
+   SHORTS PAGE OVERRIDES
+   ========================================================= */
+
+/*
+   If JS adds .active to #shorts, don't let the normal
+   page padding destroy the full-screen Shorts experience.
+*/
+
+#shorts.page.active,
+.page#shorts.active,
+#shortsPage.page.active{
+
+  max-width:none;
+
+  padding:0;
+
+  width:100%;
+}
+
+/*
+   Common IDs/classes used by different app.js versions.
+*/
+
+#shorts .sectionHead,
+.shortsPage .sectionHead{
+
+  display:none;
+}
+
+#shorts .shortsGrid{
+
+  width:100%;
+}
+
+/* =========================================================
+   SHORT CARD FALLBACK
+   ========================================================= */
+
+.shortCard{
+
+  position:relative;
+
+  overflow:hidden;
+
+  background:#090a0e;
+
+  border:1px solid #242832;
+
+  border-radius:18px;
+
+  box-shadow:
+    0 12px 40px rgba(0,0,0,.25);
+
+  transition:.2s ease;
+}
+
+.shortCard:hover{
+
+  transform:translateY(-5px);
+
+  border-color:#3b4050;
+
+  box-shadow:
+    0 20px 60px rgba(0,0,0,.4);
+}
+
+.shortCard .thumb{
+
+  width:100%;
+
+  aspect-ratio:9/16;
+
+  object-fit:cover;
+}
+
+.shortCard .cardBody{
+
+  background:
+    linear-gradient(
+      180deg,
+      #11131a,
+      #0c0e13
+    );
+}
+
+/* =========================================================
    STATS
    ========================================================= */
 
@@ -750,6 +1382,7 @@ video{
   content:"";
 
   position:absolute;
+
   width:80px;
   height:80px;
 
@@ -757,15 +1390,19 @@ video{
   bottom:-35px;
 
   background:#f02f70;
+
   opacity:.06;
 
   border-radius:50%;
+
   filter:blur(5px);
 }
 
 .stat b{
   font-size:29px;
+
   display:block;
+
   margin-top:3px;
 }
 
@@ -775,6 +1412,7 @@ video{
 
 .panel,
 .formWrap{
+
   background:
     linear-gradient(
       145deg,
@@ -783,6 +1421,7 @@ video{
     );
 
   border:1px solid #1d212b;
+
   border-radius:19px;
 
   padding:22px;
@@ -799,22 +1438,28 @@ video{
 
 .formWrap label{
   display:block;
+
   font-weight:750;
+
   margin:15px 0;
 }
 
 .formWrap input,
 .formWrap textarea,
 .formWrap select{
+
   width:100%;
 
   margin-top:7px;
+
   padding:13px;
 
   border-radius:12px;
+
   border:1px solid #292d38;
 
   background:#090b10;
+
   color:#fff;
 
   outline:0;
@@ -825,6 +1470,7 @@ video{
 .formWrap input:focus,
 .formWrap textarea:focus,
 .formWrap select:focus{
+
   border-color:#f02f70;
 
   box-shadow:
@@ -866,7 +1512,9 @@ video{
   flex:1;
 
   background:#11141b;
+
   border:1px solid #292d38;
+
   color:#aaa;
 
   padding:12px;
@@ -882,7 +1530,9 @@ video{
 }
 
 .mode.active{
+
   color:#fff;
+
   border-color:#f02f70;
 
   background:
@@ -897,20 +1547,26 @@ video{
 }
 
 .progress{
+
   height:7px;
 
   background:#1b1e27;
 
   border-radius:99px;
+
   overflow:hidden;
 
   margin-top:14px;
+
   display:none;
 }
 
 .progress span{
+
   display:block;
+
   height:100%;
+
   width:0;
 
   background:
@@ -930,7 +1586,9 @@ video{
    ========================================================= */
 
 .modal{
+
   position:fixed;
+
   inset:0;
 
   background:rgba(0,0,0,.72);
@@ -939,6 +1597,7 @@ video{
   -webkit-backdrop-filter:blur(12px);
 
   display:grid;
+
   place-items:center;
 
   z-index:100;
@@ -951,6 +1610,7 @@ video{
 }
 
 .modalCard{
+
   position:relative;
 
   width:min(440px,100%);
@@ -965,6 +1625,7 @@ video{
     );
 
   border:1px solid #292d38;
+
   border-radius:23px;
 
   box-shadow:
@@ -975,6 +1636,7 @@ video{
 }
 
 @keyframes modalIn{
+
   from{
     opacity:0;
     transform:translateY(12px) scale(.97);
@@ -987,6 +1649,7 @@ video{
 }
 
 .close{
+
   position:absolute;
 
   right:15px;
@@ -996,9 +1659,11 @@ video{
   height:38px;
 
   background:transparent;
+
   border:0;
 
   color:#aaa;
+
   font-size:28px;
 
   border-radius:10px;
@@ -1007,15 +1672,19 @@ video{
 }
 
 .close:hover{
+
   background:#191c24;
+
   color:#fff;
 }
 
 .modalLogo{
+
   width:65px;
   height:65px;
 
   object-fit:contain;
+
   border-radius:16px;
 
   filter:
@@ -1023,28 +1692,35 @@ video{
 }
 
 .modalCard label{
+
   display:block;
+
   margin:13px 0;
 }
 
 .modalCard input{
+
   width:100%;
 
   padding:12px;
+
   margin-top:7px;
 
   background:#080a0f;
 
   border:1px solid #292d38;
+
   border-radius:11px;
 
   color:#fff;
+
   outline:0;
 
   transition:.18s ease;
 }
 
 .modalCard input:focus{
+
   border-color:#f02f70;
 
   box-shadow:
@@ -1056,16 +1732,22 @@ video{
    ========================================================= */
 
 .watch{
+
   display:grid;
+
   grid-template-columns:minmax(0,1fr) 340px;
+
   gap:22px;
 }
 
 .watchVideo{
+
   width:100%;
+
   max-height:72vh;
 
   background:#000;
+
   border-radius:17px;
 
   box-shadow:
@@ -1073,14 +1755,20 @@ video{
 }
 
 .actions{
+
   display:flex;
+
   gap:8px;
+
   flex-wrap:wrap;
+
   margin:14px 0;
 }
 
 .comment{
+
   padding:13px 0;
+
   border-bottom:1px solid #20232c;
 }
 
@@ -1089,8 +1777,11 @@ video{
    ========================================================= */
 
 .profileHead{
+
   display:flex;
+
   align-items:center;
+
   gap:18px;
 
   padding:25px;
@@ -1103,23 +1794,30 @@ video{
     );
 
   border:1px solid #1c2029;
+
   border-radius:19px;
 
   margin-bottom:22px;
 }
 
 .profileHead > div{
+
   min-width:0;
+
   flex:1;
 }
 
 .profileHead h1{
+
   margin:0 0 5px;
+
   overflow:hidden;
+
   text-overflow:ellipsis;
 }
 
 .avatar{
+
   width:70px;
   height:70px;
 
@@ -1138,6 +1836,7 @@ video{
 }
 
 .pill{
+
   display:inline-block;
 
   padding:4px 9px;
@@ -1160,9 +1859,11 @@ video{
    ========================================================= */
 
 #toast{
+
   position:fixed;
 
   right:18px;
+
   bottom:18px;
 
   z-index:200;
@@ -1195,7 +1896,9 @@ video{
 }
 
 #toast.show{
+
   opacity:1;
+
   transform:none;
 }
 
@@ -1206,8 +1909,11 @@ video{
 @media(max-width:1000px){
 
   .topbar{
+
     gap:9px;
+
     padding:9px 13px;
+
     flex-wrap:wrap;
   }
 
@@ -1216,14 +1922,20 @@ video{
   }
 
   .search{
+
     order:3;
+
     flex-basis:100%;
+
     max-width:none;
+
     margin:0;
   }
 
   .hero{
+
     grid-template-columns:1fr;
+
     padding:40px 25px;
   }
 
@@ -1246,6 +1958,53 @@ video{
   .brand span{
     display:none;
   }
+
+  /*
+     Shorts on tablet.
+  */
+
+  .short,
+  .shortItem,
+  .shortVideo,
+  .short-feed-item,
+  .shortsItem{
+
+    height:calc(100vh - 58px);
+
+    min-height:500px;
+  }
+
+  .shortInfo,
+  .short-info,
+  .shortMeta,
+  .shortCaption{
+
+    left:18px;
+    right:85px;
+    bottom:22px;
+  }
+
+  .shortActions,
+  .short-actions,
+  .shortSideActions,
+  .shortButtons{
+
+    right:12px;
+    bottom:20px;
+
+    gap:12px;
+  }
+
+  .shortAction,
+  .short-action,
+  .shortButtons button,
+  .shortActions button{
+
+    width:48px;
+    height:48px;
+
+    font-size:21px;
+  }
 }
 
 /* =========================================================
@@ -1255,7 +2014,9 @@ video{
 @media(max-width:520px){
 
   .topbar{
+
     gap:6px;
+
     padding:8px 9px;
   }
 
@@ -1264,28 +2025,31 @@ video{
   }
 
   .brand img{
+
     width:34px;
     height:34px;
   }
 
-  /*
-     IMPORTANT:
-     Studio/account buttons remain visible.
-  */
-
   .account{
+
     margin-left:auto;
+
     display:flex;
+
     gap:4px;
+
     align-items:center;
+
     flex-shrink:0;
   }
 
   .account .ghost,
   .account .primary{
+
     display:inline-flex;
 
     align-items:center;
+
     justify-content:center;
 
     padding:8px 9px;
@@ -1302,8 +2066,11 @@ video{
   }
 
   .search{
+
     width:100%;
+
     flex-basis:100%;
+
     order:3;
   }
 
@@ -1312,14 +2079,18 @@ video{
   }
 
   .hero{
+
     min-height:400px;
+
     padding:34px 20px;
 
     border-radius:23px;
   }
 
   .hero h1{
+
     font-size:48px;
+
     letter-spacing:-2px;
   }
 
@@ -1333,7 +2104,9 @@ video{
 
   .heroBtns .primary,
   .heroBtns .ghost{
+
     width:100%;
+
     text-align:center;
   }
 
@@ -1346,12 +2119,16 @@ video{
   }
 
   .videoGrid{
+
     grid-template-columns:1fr 1fr;
+
     gap:9px;
   }
 
   .shortsGrid{
+
     grid-template-columns:1fr 1fr;
+
     gap:9px;
   }
 
@@ -1372,7 +2149,9 @@ video{
   }
 
   .stats{
+
     grid-template-columns:1fr 1fr;
+
     gap:9px;
   }
 
@@ -1386,13 +2165,18 @@ video{
 
   .panel,
   .formWrap{
+
     padding:16px;
+
     border-radius:16px;
   }
 
   .profileHead{
+
     padding:15px;
+
     gap:11px;
+
     border-radius:16px;
   }
 
@@ -1401,6 +2185,7 @@ video{
   }
 
   .avatar{
+
     width:55px;
     height:55px;
   }
@@ -1414,15 +2199,177 @@ video{
   }
 
   .modalCard{
+
     padding:22px;
+
     border-radius:19px;
   }
 
   #toast{
+
     left:12px;
+
     right:12px;
+
     bottom:12px;
+
     max-width:none;
+  }
+
+  /* =======================================================
+     MOBILE SHORTS
+     ======================================================= */
+
+  .shortsFeed,
+  .shortsContainer,
+  .shortsPage,
+  .shorts-list{
+
+    height:calc(100svh - 58px);
+
+    min-height:0;
+
+    scroll-snap-type:y mandatory;
+  }
+
+  .short,
+  .shortItem,
+  .shortVideo,
+  .short-feed-item,
+  .shortsItem{
+
+    height:calc(100svh - 58px);
+
+    min-height:0;
+
+    width:100%;
+
+    border:0;
+  }
+
+  /*
+     True phone portrait video.
+  */
+
+  .short video,
+  .shortItem video,
+  .shortVideo video,
+  .short-feed-item video,
+  .shortsItem video{
+
+    object-fit:cover;
+  }
+
+  .shortInfo,
+  .short-info,
+  .shortMeta,
+  .shortCaption{
+
+    left:14px;
+
+    right:76px;
+
+    bottom:18px;
+  }
+
+  .shortInfo h3,
+  .short-info h3,
+  .shortMeta h3{
+
+    font-size:17px;
+
+    margin-bottom:6px;
+  }
+
+  .shortInfo p,
+  .short-info p,
+  .shortCaption p{
+
+    font-size:13px;
+
+    line-height:1.35;
+
+    max-width:none;
+  }
+
+  .shortCreator,
+  .short-creator,
+  .shortUser{
+
+    margin-bottom:8px;
+  }
+
+  .shortCreator img,
+  .short-creator img,
+  .shortUser img{
+
+    width:34px;
+    height:34px;
+  }
+
+  .shortActions,
+  .short-actions,
+  .shortSideActions,
+  .shortButtons{
+
+    right:9px;
+
+    bottom:18px;
+
+    gap:12px;
+  }
+
+  .shortAction,
+  .short-action,
+  .shortButtons button,
+  .shortActions button{
+
+    width:45px;
+    height:45px;
+
+    font-size:20px;
+
+    background:rgba(10,10,14,.65);
+  }
+
+  .shortActionCount,
+  .short-action-count{
+
+    font-size:11px;
+  }
+
+  .shortMute,
+  .short-mute,
+  .shortsMute{
+
+    top:12px;
+
+    right:12px;
+
+    width:42px;
+    height:42px;
+
+    font-size:18px;
+  }
+
+  .shortsTopBar{
+
+    top:11px;
+
+    left:13px;
+
+    right:64px;
+  }
+
+  .shortsTitle{
+    font-size:18px;
+  }
+
+  .shortsBadge{
+
+    padding:6px 9px;
+
+    font-size:11px;
   }
 }
 
@@ -1437,6 +2384,7 @@ video{
   }
 
   .brand img{
+
     width:31px;
     height:31px;
   }
@@ -1447,8 +2395,11 @@ video{
 
   .account .ghost,
   .account .primary{
+
     padding:7px 7px;
+
     font-size:11px;
+
     min-height:33px;
   }
 
@@ -1476,6 +2427,84 @@ video{
   .cardBody{
     padding:8px;
   }
+
+  /* Smaller Shorts controls */
+
+  .shortActions,
+  .short-actions,
+  .shortSideActions,
+  .shortButtons{
+
+    right:7px;
+
+    gap:9px;
+  }
+
+  .shortAction,
+  .short-action,
+  .shortButtons button,
+  .shortActions button{
+
+    width:42px;
+    height:42px;
+
+    font-size:18px;
+  }
+
+  .shortInfo,
+  .short-info,
+  .shortMeta,
+  .shortCaption{
+
+    left:11px;
+
+    right:62px;
+
+    bottom:15px;
+  }
+}
+
+/* =========================================================
+   LANDSCAPE PHONE
+   ========================================================= */
+
+@media(max-height:550px) and (orientation:landscape){
+
+  .short,
+  .shortItem,
+  .shortVideo,
+  .short-feed-item,
+  .shortsItem{
+
+    height:calc(100svh - 58px);
+  }
+
+  .shortInfo,
+  .short-info,
+  .shortMeta,
+  .shortCaption{
+
+    bottom:12px;
+  }
+
+  .shortActions,
+  .short-actions,
+  .shortSideActions,
+  .shortButtons{
+
+    bottom:12px;
+
+    gap:7px;
+  }
+
+  .shortAction,
+  .short-action,
+  .shortButtons button,
+  .shortActions button{
+
+    width:40px;
+    height:40px;
+  }
 }
 
 /* =========================================================
@@ -1500,6 +2529,14 @@ video{
   .brand:hover{
     transform:none;
   }
+
+  .shortAction:hover,
+  .short-action:hover,
+  .shortButtons button:hover,
+  .shortActions button:hover{
+
+    transform:none;
+  }
 }
 
 /* =========================================================
@@ -1511,9 +2548,13 @@ video{
   *,
   *::before,
   *::after{
+
     animation-duration:.01ms!important;
+
     animation-iteration-count:1!important;
+
     transition-duration:.01ms!important;
+
     scroll-behavior:auto!important;
   }
-} make it a trillion times cooler
+}
