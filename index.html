@@ -1,7 +1,12 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta name="google-site-verification" content="uTkgnF4BqF7AqFzpl2iM5-vXJbtuz4GhShcGcbqSWW0">
+
+  <!-- Google Search Console verification -->
+  <meta
+    name="google-site-verification"
+    content="uTkgnF4BqF7AqFzpl2iM5-vXJbtuz4GhShcGcbqSWW0"
+  >
 
   <meta charset="utf-8">
 
@@ -15,9 +20,10 @@
     content="#08090d"
   >
 
+  <!-- Google SEO -->
   <meta
     name="description"
-    content="Nockage — create, watch, share and discover videos and Shorts."
+    content="Watch videos on Nockage and share your videos!"
   >
 
   <meta
@@ -25,14 +31,74 @@
     content="index,follow"
   >
 
+  <meta
+    name="googlebot"
+    content="index,follow"
+  >
+
+  <!-- Canonical homepage -->
   <link
     rel="canonical"
     href="./"
   >
 
+  <!-- Nockage icon -->
   <link
     rel="icon"
+    type="image/png"
     href="./assets/nockage-logo.png"
+  >
+
+  <link
+    rel="apple-touch-icon"
+    href="./assets/nockage-logo.png"
+  >
+
+  <!-- Open Graph -->
+  <meta
+    property="og:type"
+    content="website"
+  >
+
+  <meta
+    property="og:title"
+    content="Nockage - Watch and Create"
+  >
+
+  <meta
+    property="og:description"
+    content="Watch videos on Nockage and share your videos!"
+  >
+
+  <meta
+    property="og:site_name"
+    content="Nockage"
+  >
+
+  <meta
+    property="og:image"
+    content="./assets/nockage-logo.png"
+  >
+
+  <!-- Twitter / social preview -->
+  <meta
+    name="twitter:card"
+    content="summary"
+  >
+
+  <meta
+    name="twitter:title"
+    content="Nockage - Watch and Create"
+  >
+
+  <meta
+    name="twitter:description"
+    content="Watch videos on Nockage and share your videos!"
+  >
+
+  <meta
+    name="twitter:image"
+    content="./assets/nockage-logo.png"
   >
 
   <link
@@ -40,22 +106,31 @@
     href="./styles.css"
   >
 
-  <title>Nockage — Create. Share. Connect.</title>
+  <!-- GOOGLE TITLE -->
+  <title>Nockage - Watch and Create</title>
+
 </head>
 
 <body>
 
   <div id="toast"></div>
 
-  <!-- TOP BAR -->
+
+  <!-- ======================================================
+       TOP BAR
+       ====================================================== -->
 
   <header class="topbar">
 
-    <a class="brand" href="#home">
+    <a
+      class="brand"
+      href="#home"
+      aria-label="Nockage Home"
+    >
 
       <img
         src="./assets/nockage-logo.png"
-        alt="Nockage"
+        alt="Nockage logo"
       >
 
       <span>NOCKAGE</span>
@@ -69,12 +144,13 @@
         id="searchInput"
         placeholder="Search Nockage"
         autocomplete="off"
+        aria-label="Search Nockage"
       >
 
       <button
         id="searchBtn"
         type="button"
-        aria-label="Search"
+        aria-label="Search Nockage"
       >
         ⌕
       </button>
@@ -82,13 +158,15 @@
     </div>
 
 
-    <nav id="desktopNav">
+    <nav id="desktopNav" aria-label="Main navigation">
 
       <a href="#home">Home</a>
 
       <a href="#shorts">Shorts</a>
 
-      <a href="#subscriptions">Subscriptions</a>
+      <a href="#subscriptions">
+        Subscriptions
+      </a>
 
     </nav>
 
@@ -119,11 +197,16 @@
   </header>
 
 
-  <!-- MAIN -->
+  <!-- ======================================================
+       MAIN
+       ====================================================== -->
 
   <main>
 
-    <!-- HOME -->
+
+    <!-- ====================================================
+         HOME
+         ==================================================== -->
 
     <section
       id="home"
@@ -144,9 +227,8 @@
           </h1>
 
           <p>
-            Real accounts, real uploads,
-            real subscriptions and real
-            video data — powered by Supabase.
+            Watch videos on Nockage and
+            share your videos!
           </p>
 
           <div class="heroBtns">
@@ -176,13 +258,13 @@
 
           <img
             src="./assets/nockage-logo.png"
-            alt=""
+            alt="Nockage"
           >
 
           <b>NOCKAGE</b>
 
           <small>
-            Creator-focused video sharing
+            Watch and create videos
           </small>
 
         </div>
@@ -207,7 +289,9 @@
     </section>
 
 
-    <!-- SHORTS -->
+    <!-- ====================================================
+         SHORTS
+         ==================================================== -->
 
     <section
       id="shorts"
@@ -236,7 +320,9 @@
     </section>
 
 
-    <!-- SUBSCRIPTIONS -->
+    <!-- ====================================================
+         SUBSCRIPTIONS
+         ==================================================== -->
 
     <section
       id="subscriptions"
@@ -265,7 +351,9 @@
     </section>
 
 
-    <!-- SEARCH -->
+    <!-- ====================================================
+         SEARCH
+         ==================================================== -->
 
     <section
       id="search"
@@ -288,7 +376,9 @@
     </section>
 
 
-    <!-- WATCH -->
+    <!-- ====================================================
+         WATCH
+         ==================================================== -->
 
     <section
       id="watch"
@@ -300,7 +390,9 @@
     </section>
 
 
-    <!-- STUDIO -->
+    <!-- ====================================================
+         STUDIO
+         ==================================================== -->
 
     <section
       id="studio"
@@ -339,7 +431,9 @@
     </section>
 
 
-    <!-- PROFILE -->
+    <!-- ====================================================
+         PROFILE
+         ==================================================== -->
 
     <section
       id="profile"
@@ -351,7 +445,9 @@
     </section>
 
 
-    <!-- UPLOAD -->
+    <!-- ====================================================
+         UPLOAD
+         ==================================================== -->
 
     <section
       id="upload"
@@ -492,7 +588,9 @@
     </section>
 
 
-    <!-- SETTINGS -->
+    <!-- ====================================================
+         SETTINGS
+         ==================================================== -->
 
     <section
       id="settings"
@@ -523,7 +621,9 @@
   </main>
 
 
-  <!-- AUTH MODAL -->
+  <!-- ======================================================
+       AUTH MODAL
+       ====================================================== -->
 
   <div
     id="authModal"
@@ -565,8 +665,6 @@
         autocomplete="off"
       >
 
-        <!-- USERNAME -->
-
         <label id="usernameLabel">
 
           Username
@@ -587,8 +685,6 @@
         </label>
 
 
-        <!-- EMAIL -->
-
         <label id="emailLabel">
 
           Email
@@ -605,8 +701,6 @@
 
         </label>
 
-
-        <!-- PASSWORD -->
 
         <label>
 
@@ -657,9 +751,18 @@
   </div>
 
 
-  <!-- SCRIPTS -->
+  <!-- ======================================================
+       SUPABASE
+       ====================================================== -->
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"
+  ></script>
+
+
+  <!-- ======================================================
+       NOCKAGE APP
+       ====================================================== -->
 
   <script src="./app.js"></script>
 
