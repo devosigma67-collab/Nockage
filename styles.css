@@ -1,19 +1,20 @@
 /* ============================================================
-   NOCKAGE — CLASSIC UI + FULLSCREEN SHORTS
+   NOCKAGE 1.1 — FULL STYLES
+   Normal Videos + TikTok/YouTube Shorts UI
    ============================================================ */
 
 :root {
   --bg: #0b0b0f;
-  --panel: #121218;
+  --panel: #121219;
   --panel2: #181820;
   --text: #ffffff;
-  --muted: #9b9ba7;
+  --muted: #a7a7b3;
   --border: rgba(255,255,255,.10);
-  --accent: #5865f2;
-  --accent2: #7289ff;
+  --primary: #ffffff;
+  --primaryText: #08080b;
   --danger: #e53935;
   --radius: 14px;
-  --max: 1400px;
+  --max: 1250px;
 }
 
 * {
@@ -26,7 +27,6 @@ html {
 
 body {
   margin: 0;
-  min-height: 100vh;
   background: var(--bg);
   color: var(--text);
   font-family:
@@ -36,13 +36,15 @@ body {
     BlinkMacSystemFont,
     "Segoe UI",
     sans-serif;
+  min-height: 100vh;
 }
 
+body,
 button,
 input,
 textarea,
 select {
-  font: inherit;
+  font-family: inherit;
 }
 
 button,
@@ -50,119 +52,154 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+button {
+  cursor: pointer;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
+/* ============================================================
+   LINKS
+   ============================================================ */
+
 a {
   color: inherit;
+  text-decoration: none;
 }
 
 /* ============================================================
    HEADER
    ============================================================ */
 
-header,
-.header,
-.navbar,
-.topbar {
+header {
   position: sticky;
   top: 0;
-  z-index: 1000;
-}
-
-header {
-  background: rgba(11,11,15,.94);
+  z-index: 5000;
+  width: 100%;
+  background: rgba(11,11,15,.92);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(14px);
 }
 
-.container,
-main,
-.page {
-  width: min(var(--max), calc(100% - 32px));
-  margin-inline: auto;
+.nav,
+.navbar,
+header > div {
+  max-width: var(--max);
+  margin: auto;
 }
 
-nav {
-  min-height: 68px;
+header nav {
+  min-height: 64px;
   display: flex;
   align-items: center;
   gap: 14px;
+  padding: 10px 18px;
 }
 
 .logo,
-.logo img {
-  max-height: 42px;
-}
-
-.logo {
+.brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  text-decoration: none;
+  gap: 9px;
   font-weight: 900;
-  font-size: 21px;
+  font-size: 20px;
+  white-space: nowrap;
 }
 
-.logo img {
-  width: 40px;
-  height: 40px;
+.logo img,
+.brand img {
+  width: 34px;
+  height: 34px;
   object-fit: contain;
+  border-radius: 9px;
 }
-
-/* ============================================================
-   NAVIGATION
-   ============================================================ */
 
 .navLinks {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .navLinks a,
 nav a {
-  text-decoration: none;
+  padding: 9px 11px;
+  border-radius: 9px;
+  color: var(--muted);
+  transition: .18s ease;
 }
 
+.navLinks a:hover,
+nav a:hover {
+  color: var(--text);
+  background: rgba(255,255,255,.07);
+}
+
+.accountArea {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ============================================================
+   BUTTONS
+   ============================================================ */
+
+.primary,
 .ghost,
-.primary {
-  min-height: 40px;
-  padding: 9px 14px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
+button.primary,
+button.ghost {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 7px;
-  cursor: pointer;
-  text-decoration: none;
+  min-height: 40px;
+  padding: 0 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 750;
+  border: 1px solid transparent;
   transition:
     transform .15s ease,
     background .15s ease,
-    border-color .15s ease;
+    opacity .15s ease;
 }
 
-.ghost {
-  background: rgba(255,255,255,.05);
+.primary,
+button.primary {
+  background: var(--primary);
+  color: var(--primaryText);
+}
+
+.primary:hover,
+button.primary:hover {
+  transform: translateY(-1px);
+  opacity: .9;
+}
+
+.ghost,
+button.ghost {
+  background: rgba(255,255,255,.07);
   color: var(--text);
-}
-
-.primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: white;
-  font-weight: 800;
+  border-color: var(--border);
 }
 
 .ghost:hover,
-.primary:hover {
-  transform: translateY(-1px);
+button.ghost:hover {
+  background: rgba(255,255,255,.12);
 }
 
-.ghost:hover {
-  background: rgba(255,255,255,.09);
+button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
 }
 
-.primary:hover {
-  background: var(--accent2);
+.wide {
+  width: 100%;
 }
 
 /* ============================================================
@@ -170,56 +207,72 @@ nav a {
    ============================================================ */
 
 .searchBox {
-  flex: 1;
   display: flex;
-  justify-content: center;
-  min-width: 120px;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .searchBox input,
 #searchInput {
-  width: min(620px, 100%);
-  height: 42px;
-  padding: 0 15px;
-  border-radius: 12px;
+  width: 100%;
+  min-height: 40px;
+  padding: 0 14px;
   border: 1px solid var(--border);
+  border-radius: 999px;
   outline: none;
-  background: #15151c;
-  color: white;
+  background: rgba(255,255,255,.06);
+  color: var(--text);
 }
 
 .searchBox input:focus,
 #searchInput:focus {
-  border-color: var(--accent);
+  border-color: rgba(255,255,255,.3);
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--panel2);
+  color: var(--text);
+  outline: none;
+  padding: 12px 13px;
+  font-size: 14px;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: rgba(255,255,255,.3);
 }
 
 /* ============================================================
-   ACCOUNT
+   MAIN
    ============================================================ */
 
-#accountArea {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-left: auto;
+main {
+  width: 100%;
 }
-
-/* ============================================================
-   PAGES
-   ============================================================ */
 
 .page {
   display: none;
-  padding-top: 28px;
-  padding-bottom: 60px;
+  width: min(var(--max), calc(100% - 32px));
+  margin: 0 auto;
+  padding: 30px 0 70px;
 }
 
 .page.active {
   display: block;
-}
-
-.page > h1 {
-  margin-top: 0;
 }
 
 /* ============================================================
@@ -227,224 +280,243 @@ nav a {
    ============================================================ */
 
 .hero {
-  padding: 70px 0 50px;
+  padding: 65px 0 45px;
 }
 
 .hero h1 {
-  margin: 0 0 14px;
-  font-size: clamp(38px, 6vw, 72px);
+  max-width: 850px;
+  margin: 0;
+  font-size: clamp(38px, 7vw, 76px);
   line-height: .98;
   letter-spacing: -3px;
 }
 
 .hero p {
-  max-width: 650px;
+  max-width: 680px;
   color: var(--muted);
   font-size: 18px;
   line-height: 1.6;
+  margin: 22px 0;
 }
 
 .heroActions {
   display: flex;
-  gap: 10px;
   flex-wrap: wrap;
-  margin-top: 24px;
+  gap: 10px;
 }
 
 /* ============================================================
-   SECTION HEAD
+   SECTION HEADERS
    ============================================================ */
 
 .sectionHead {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  margin: 24px 0 16px;
+  gap: 15px;
+  margin: 25px 0 16px;
 }
 
-.sectionHead h2 {
+.sectionHead h1,
+.sectionHead h2,
+.sectionHead h3 {
   margin: 0;
 }
 
+.sectionHead h2 {
+  font-size: 24px;
+}
+
 /* ============================================================
-   VIDEO GRID — CLASSIC NOCKAGE DESIGN
+   NORMAL VIDEO GRID
    ============================================================ */
 
 .videoGrid,
 #homeGrid,
 #searchGrid,
-#subsGrid {
+#subsGrid,
+#profileContent .videoGrid {
   display: grid;
-  grid-template-columns:
-    repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
 }
 
+/* ============================================================
+   NORMAL VIDEO CARD
+   ============================================================ */
+
 .card {
+  min-width: 0;
   overflow: hidden;
-  background: var(--panel);
   border: 1px solid var(--border);
   border-radius: var(--radius);
+  background: var(--panel);
   cursor: pointer;
   transition:
     transform .18s ease,
     border-color .18s ease,
-    box-shadow .18s ease;
+    background .18s ease;
 }
 
 .card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(255,255,255,.18);
-  box-shadow: 0 15px 40px rgba(0,0,0,.25);
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,.2);
+  background: #16161e;
+}
+
+.card:focus {
+  outline: 2px solid rgba(255,255,255,.55);
+  outline-offset: 2px;
 }
 
 .thumb {
   width: 100%;
   aspect-ratio: 16 / 9;
   display: block;
+  object-fit: cover;
   background:
     linear-gradient(
       135deg,
-      #171722,
-      #0d0d12
+      #17171f,
+      #09090d
     );
-  object-fit: cover;
 }
 
 .cardBody {
-  padding: 14px;
+  padding: 13px;
 }
 
 .cardTitle {
-  font-size: 16px;
   font-weight: 800;
-  line-height: 1.35;
-  margin-bottom: 7px;
+  line-height: 1.3;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .meta {
   color: var(--muted);
   font-size: 13px;
-}
-
-/* ============================================================
-   SHORT CARD INSIDE PROFILES
-   ============================================================ */
-
-.shortCard .thumb {
-  aspect-ratio: 9 / 16;
+  line-height: 1.5;
+  margin-top: 6px;
 }
 
 /* ============================================================
    SHORTS PAGE
    ============================================================ */
 
-#shorts {
+#shorts.page {
   width: 100%;
   max-width: none;
   padding: 0;
-  margin: 0;
+  background: #050507;
 }
 
-#shortsGrid {
-  width: 100%;
-  margin: 0;
-  padding: 0;
+/*
+   The Shorts page intentionally does NOT use the normal
+   .videoGrid. It gets a dedicated vertical feed.
+*/
+
+#shorts > .sectionHead,
+#shorts .sectionHead {
+  width: min(900px, calc(100% - 30px));
+  margin: 0 auto;
+  padding: 25px 0 15px;
 }
 
-#shortsGrid .empty {
-  width: min(var(--max), calc(100% - 32px));
-  margin: 30px auto;
+#shorts .sectionHead h1,
+#shorts .sectionHead h2 {
+  font-size: 28px;
 }
 
 /* ============================================================
-   FULLSCREEN SHORTS FEED
+   SHORTS FEED
    ============================================================ */
 
 .nockageShortsFeed {
   width: 100%;
-  height: calc(100vh - 68px);
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  scroll-snap-type: y mandatory;
-
-  scrollbar-width: none;
+  min-height: calc(100vh - 80px);
 
   display: flex;
   flex-direction: column;
   align-items: center;
 
-  background: #050505;
+  gap: 18px;
+  padding: 8px 0 45px;
 }
 
-.nockageShortsFeed::-webkit-scrollbar {
-  display: none;
-}
+/* ============================================================
+   SHORT ITEM
+   ============================================================ */
 
 .nockageShortItem {
   position: relative;
 
-  width: min(100%, 520px);
-  height: calc(100vh - 68px);
-  min-height: 600px;
+  width: min(430px, calc(100vw - 20px));
 
-  flex: 0 0 auto;
+  height: min(760px, calc(100vh - 100px));
+  min-height: 560px;
 
   overflow: hidden;
 
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
+  border-radius: 18px;
 
   background: #000;
+
+  box-shadow:
+    0 20px 70px rgba(0,0,0,.45);
+
+  isolation: isolate;
 }
 
 /* ============================================================
    SHORT VIDEO
    ============================================================ */
 
-.nockageShortVideo,
-.nockageShortEmbed {
-  position: absolute;
-  inset: 0;
-
+.nockageShortVideo {
   width: 100%;
   height: 100%;
 
-  border: 0;
-
   display: block;
+
+  object-fit: cover;
 
   background: #000;
 }
 
-.nockageShortVideo {
-  object-fit: cover;
-}
-
 .nockageShortEmbed {
-  object-fit: cover;
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  border: 0;
+
+  background: #000;
 }
 
 /* ============================================================
-   SHORT GRADIENT
+   SHORT TOP GRADIENT
    ============================================================ */
 
-.nockageShortItem::after {
+.nockageShortItem::before {
   content: "";
 
   position: absolute;
   inset: 0;
 
+  z-index: 2;
+
   pointer-events: none;
 
   background:
     linear-gradient(
-      to top,
-      rgba(0,0,0,.88) 0%,
-      rgba(0,0,0,.45) 20%,
-      transparent 48%
+      to bottom,
+      rgba(0,0,0,.5),
+      transparent 22%,
+      transparent 55%,
+      rgba(0,0,0,.9)
     );
 }
 
@@ -455,45 +527,92 @@ nav a {
 .nockageShortOverlay {
   position: absolute;
 
+  z-index: 4;
+
   left: 0;
   right: 0;
   bottom: 0;
 
-  z-index: 5;
+  padding: 90px 18px 18px;
 
-  padding: 25px 90px 28px 18px;
-
-  color: white;
+  color: #fff;
 
   pointer-events: none;
 }
 
-.nockageShortOverlay * {
+.nockageShortOverlay > * {
   pointer-events: auto;
 }
 
+/* ============================================================
+   SHORT TOP
+   ============================================================ */
+
 .nockageShortTop {
-  display: none;
+  position: absolute;
+
+  top: 16px;
+  left: 16px;
+  right: 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
+
+/* ============================================================
+   SHORT BADGE
+   ============================================================ */
 
 .nockageShortBadge {
-  display: none;
+  display: inline-flex;
+  align-items: center;
+
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  background: rgba(0,0,0,.55);
+  border: 1px solid rgba(255,255,255,.15);
+
+  backdrop-filter: blur(10px);
+
+  font-size: 11px;
+  font-weight: 900;
+  letter-spacing: .6px;
 }
 
+/* ============================================================
+   SHORT TITLE
+   ============================================================ */
+
 .nockageShortTitle {
-  font-size: 18px;
-  font-weight: 850;
-  line-height: 1.35;
+  font-size: 20px;
+  font-weight: 900;
+
+  line-height: 1.25;
+
   margin-bottom: 7px;
 
   text-shadow:
-    0 2px 8px rgba(0,0,0,.8);
+    0 2px 12px rgba(0,0,0,.8);
+
+  overflow: hidden;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 
 .nockageShortMeta {
   color: rgba(255,255,255,.82);
+
   font-size: 14px;
-  margin-bottom: 12px;
+
+  margin-bottom: 13px;
+
+  text-shadow:
+    0 2px 8px rgba(0,0,0,.8);
 }
 
 /* ============================================================
@@ -501,96 +620,33 @@ nav a {
    ============================================================ */
 
 .nockageShortActions {
-  position: absolute;
-
-  right: 12px;
-  bottom: 26px;
-
   display: flex;
-  flex-direction: column;
-  align-items: center;
-
-  gap: 14px;
-
-  z-index: 10;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .nockageShortActions button,
 .nockageShortActions a {
-  width: 48px;
-  height: 48px;
+  min-height: 38px;
 
-  padding: 0;
+  padding: 0 13px;
 
-  border: 0;
-  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.2);
 
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 999px;
 
-  background: rgba(0,0,0,.52);
-  color: white;
+  background: rgba(0,0,0,.55);
 
-  cursor: pointer;
+  color: #fff;
 
-  backdrop-filter: blur(8px);
+  backdrop-filter: blur(10px);
 
-  font-size: 0;
+  font-weight: 750;
 }
 
-.nockageShortActions button::before {
-  font-size: 25px;
-}
-
-.nockageShortActions button[data-short-watch]::before {
-  content: "↗";
-}
-
-/* ============================================================
-   SHORT ACTION BUTTONS
-   ============================================================ */
-
-.nockageShortActions::before {
-  content: "♡";
-
-  width: 48px;
-  height: 48px;
-
-  border-radius: 50%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: rgba(0,0,0,.52);
-
-  font-size: 28px;
-
-  cursor: pointer;
-
-  backdrop-filter: blur(8px);
-}
-
-.nockageShortActions::after {
-  content: "↻";
-
-  width: 48px;
-  height: 48px;
-
-  border-radius: 50%;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background: rgba(0,0,0,.52);
-
-  font-size: 25px;
-
-  cursor: pointer;
-
-  backdrop-filter: blur(8px);
+.nockageShortActions button:hover,
+.nockageShortActions a:hover {
+  background: rgba(255,255,255,.15);
 }
 
 /* ============================================================
@@ -600,66 +656,53 @@ nav a {
 .watch {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 360px;
-  gap: 24px;
+  gap: 25px;
 }
 
 .watchVideo,
 .shortWatchVideo {
   width: 100%;
   max-height: 75vh;
+  min-height: 450px;
   display: block;
-  background: #000;
   border-radius: 14px;
-}
-
-.shortWatchVideo {
-  max-width: 520px;
-  margin-inline: auto;
-  aspect-ratio: 9 / 16;
+  background: #000;
   object-fit: contain;
 }
 
+.shortWatchVideo {
+  max-width: 430px;
+  margin: 0 auto;
+  max-height: 78vh;
+}
+
 .watch h1 {
-  margin-bottom: 8px;
+  margin: 18px 0 5px;
+  font-size: clamp(24px, 4vw, 38px);
 }
 
 .actions {
   display: flex;
-  gap: 8px;
   flex-wrap: wrap;
+  gap: 8px;
   margin: 16px 0;
 }
 
 .panel {
-  background: var(--panel);
+  padding: 18px;
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 18px;
+  background: var(--panel);
+  height: fit-content;
 }
 
-/* ============================================================
-   COMMENTS
-   ============================================================ */
+.panel h3 {
+  margin-top: 0;
+}
 
 #commentForm {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   gap: 8px;
-  margin-bottom: 18px;
-}
-
-#commentInput {
-  width: 100%;
-  min-height: 44px;
-  padding: 10px 12px;
-  resize: vertical;
-
-  border: 1px solid var(--border);
-  border-radius: 10px;
-
-  background: #0d0d12;
-  color: white;
-  outline: none;
 }
 
 .comment {
@@ -671,33 +714,41 @@ nav a {
   border-bottom: 0;
 }
 
-.comment b {
-  display: block;
-  margin-bottom: 4px;
-}
-
 /* ============================================================
    PROFILE
    ============================================================ */
 
 .profileHead {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 18px;
-  padding: 20px 0 30px;
-}
 
-.avatar {
-  width: 84px;
-  height: 84px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: var(--panel);
+  padding: 22px;
+
+  margin-bottom: 30px;
+
   border: 1px solid var(--border);
+  border-radius: 18px;
+
+  background: var(--panel);
 }
 
 .profileHead h1 {
-  margin: 0 0 5px;
+  margin: 0 0 6px;
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+
+  object-fit: cover;
+
+  border-radius: 50%;
+
+  background: var(--panel2);
+
+  border: 1px solid var(--border);
 }
 
 /* ============================================================
@@ -706,27 +757,33 @@ nav a {
 
 #studioStats {
   display: grid;
-  grid-template-columns:
-    repeat(4, minmax(0, 1fr));
-  gap: 14px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 20px 0 30px;
 }
 
 .stat {
-  background: var(--panel);
+  min-height: 95px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 16px;
+
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 18px;
+  border-radius: 14px;
+
+  background: var(--panel);
 }
 
 .stat span {
-  display: block;
   color: var(--muted);
   font-size: 13px;
-  margin-bottom: 7px;
 }
 
 .stat b {
+  margin-top: 5px;
   font-size: 26px;
 }
 
@@ -735,122 +792,99 @@ nav a {
    ============================================================ */
 
 .uploadBox,
-.formPanel {
-  max-width: 760px;
-  margin-inline: auto;
-  background: var(--panel);
+.formBox {
+  max-width: 800px;
+
+  margin: 0 auto;
+
+  padding: 24px;
+
   border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 22px;
+  border-radius: 18px;
+
+  background: var(--panel);
+}
+
+#uploadForm {
+  display: grid;
+  gap: 14px;
+}
+
+#uploadForm label {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .modeSwitch {
   display: flex;
   gap: 8px;
-  margin-bottom: 20px;
+  margin-bottom: 18px;
 }
 
 .mode {
   flex: 1;
-  min-height: 44px;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: rgba(255,255,255,.05);
-  color: white;
-  cursor: pointer;
 }
 
 .mode.active {
-  background: var(--accent);
-  border-color: var(--accent);
+  background: #fff;
+  color: #000;
 }
 
-input,
-textarea,
-select {
-  width: 100%;
-  background: #0d0d12;
-  color: white;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 11px 13px;
-  outline: none;
+#videoFile,
+#thumbFile {
+  padding: 10px;
 }
 
-textarea {
-  min-height: 130px;
-  resize: vertical;
-}
-
-label {
-  display: block;
-  margin-bottom: 7px;
-  font-weight: 700;
-}
-
-.field {
-  margin-bottom: 16px;
-}
-
-.wide {
-  width: 100%;
+#fileInfo {
+  color: var(--muted);
+  font-size: 13px;
 }
 
 #uploadProgress {
   width: 100%;
-  height: 8px;
-  background: rgba(255,255,255,.08);
-  border-radius: 999px;
+  height: 7px;
   overflow: hidden;
+  border-radius: 999px;
+  background: rgba(255,255,255,.1);
 }
 
 #uploadProgress span {
   display: block;
   width: 0;
   height: 100%;
-  background: var(--accent);
-  transition: width .25s ease;
+  border-radius: inherit;
+  background: #fff;
+  transition: width .2s ease;
 }
 
 /* ============================================================
-   EMPTY / MUTED
+   SETTINGS
    ============================================================ */
 
-.empty {
-  padding: 35px;
-  text-align: center;
-  color: var(--muted);
+.settingsGrid {
+  display: grid;
+  gap: 14px;
+}
+
+.settingsItem {
+  padding: 18px;
+
+  border: 1px solid var(--border);
+  border-radius: 14px;
+
   background: var(--panel);
-  border: 1px dashed var(--border);
-  border-radius: var(--radius);
-}
-
-.muted {
-  color: var(--muted);
-}
-
-.pill {
-  display: inline-flex;
-  padding: 4px 8px;
-  border-radius: 999px;
-  background: rgba(255,255,255,.08);
-  font-size: 12px;
-  margin-left: 5px;
 }
 
 /* ============================================================
-   MODALS
+   AUTH MODAL
    ============================================================ */
 
-.hidden {
-  display: none !important;
-}
-
-.modal,
 #authModal {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+
+  z-index: 10000;
 
   display: flex;
   align-items: center;
@@ -858,28 +892,41 @@ label {
 
   padding: 20px;
 
-  background: rgba(0,0,0,.72);
-  backdrop-filter: blur(8px);
+  background: rgba(0,0,0,.75);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
-.modal.hidden,
 #authModal.hidden {
   display: none;
 }
 
-.modalBox,
 .authBox {
-  width: min(480px, 100%);
-  background: #111118;
+  width: min(430px, 100%);
+
+  padding: 24px;
+
   border: 1px solid var(--border);
   border-radius: 18px;
-  padding: 24px;
-  box-shadow: 0 30px 100px rgba(0,0,0,.5);
+
+  background: #111117;
+
+  box-shadow:
+    0 30px 100px rgba(0,0,0,.55);
 }
 
-.modalBox h2,
 .authBox h2 {
   margin-top: 0;
+}
+
+#authForm {
+  display: grid;
+  gap: 12px;
+}
+
+.authClose {
+  float: right;
 }
 
 /* ============================================================
@@ -888,25 +935,32 @@ label {
 
 #toast {
   position: fixed;
+
   left: 50%;
   bottom: 25px;
 
-  z-index: 100000;
+  z-index: 11000;
 
   transform:
     translate(-50%, 20px);
 
   opacity: 0;
+
   pointer-events: none;
 
   padding: 12px 17px;
 
+  max-width: min(500px, calc(100vw - 30px));
+
+  border: 1px solid var(--border);
   border-radius: 12px;
 
-  background: #181820;
-  border: 1px solid var(--border);
+  background: rgba(20,20,27,.95);
 
-  box-shadow: 0 15px 50px rgba(0,0,0,.35);
+  color: #fff;
+
+  box-shadow:
+    0 15px 50px rgba(0,0,0,.4);
 
   transition:
     opacity .2s ease,
@@ -915,17 +969,93 @@ label {
 
 #toast.show {
   opacity: 1;
-  transform: translate(-50%, 0);
+
+  transform:
+    translate(-50%, 0);
 }
 
 /* ============================================================
-   MOBILE
+   EMPTY STATES
    ============================================================ */
 
-@media (max-width: 900px) {
+.empty {
+  width: 100%;
+
+  padding: 45px 20px;
+
+  text-align: center;
+
+  color: var(--muted);
+
+  border: 1px dashed var(--border);
+  border-radius: 14px;
+
+  background: rgba(255,255,255,.025);
+}
+
+/* ============================================================
+   TEXT HELPERS
+   ============================================================ */
+
+.muted {
+  color: var(--muted);
+}
+
+.pill {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 4px 8px;
+
+  margin-left: 5px;
+
+  border-radius: 999px;
+
+  background: rgba(255,255,255,.08);
+
+  color: var(--muted);
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+
+footer {
+  width: 100%;
+
+  padding: 35px 18px;
+
+  border-top: 1px solid var(--border);
+
+  color: var(--muted);
+
+  text-align: center;
+}
+
+/* ============================================================
+   MOBILE NAV
+   ============================================================ */
+
+@media (max-width: 950px) {
+
+  .videoGrid,
+  #homeGrid,
+  #searchGrid,
+  #subsGrid,
+  #profileContent .videoGrid {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+  }
 
   .watch {
     grid-template-columns: 1fr;
+  }
+
+  .panel {
+    order: 2;
   }
 
   #studioStats {
@@ -933,53 +1063,62 @@ label {
       repeat(2, 1fr);
   }
 
+}
+
+/* ============================================================
+   TABLET
+   ============================================================ */
+
+@media (max-width: 700px) {
+
+  header nav {
+    gap: 7px;
+    padding: 8px 10px;
+  }
+
   .navLinks {
     display: none;
   }
 
-}
-
-@media (max-width: 700px) {
-
-  .container,
-  main,
-  .page {
-    width: min(100% - 20px, var(--max));
-  }
-
-  nav {
-    min-height: 60px;
-    gap: 8px;
-  }
-
-  .logo {
-    font-size: 18px;
-  }
-
-  .logo img {
-    width: 34px;
-    height: 34px;
-  }
-
-  #accountArea .ghost {
+  .logo span,
+  .brand span {
     display: none;
   }
 
   .searchBox {
-    min-width: 0;
+    max-width: none;
   }
 
-  .searchBox input {
-    height: 38px;
+  .accountArea .ghost {
+    display: none;
+  }
+
+  .page {
+    width: min(100% - 20px, var(--max));
+    padding-top: 22px;
+  }
+
+  .hero {
+    padding-top: 40px;
+  }
+
+  .hero h1 {
+    letter-spacing: -2px;
   }
 
   .videoGrid,
   #homeGrid,
   #searchGrid,
-  #subsGrid {
+  #subsGrid,
+  #profileContent .videoGrid {
     grid-template-columns:
       repeat(2, minmax(0, 1fr));
+
     gap: 10px;
+  }
+
+  .card {
+    border-radius: 11px;
   }
 
   .cardBody {
@@ -994,66 +1133,74 @@ label {
     font-size: 12px;
   }
 
-  .hero {
-    padding: 45px 0 35px;
-  }
-
-  .hero h1 {
-    font-size: 42px;
-  }
-
   .profileHead {
-    flex-wrap: wrap;
+    grid-template-columns: auto 1fr;
+  }
+
+  .profileHead > :last-child {
+    grid-column: 1 / -1;
   }
 
   #studioStats {
-    grid-template-columns:
-      repeat(2, 1fr);
+    gap: 8px;
   }
 
-  /*
-     Shorts becomes truly fullscreen on mobile.
-  */
+}
+
+/* ============================================================
+   PHONE SHORTS
+   ============================================================ */
+
+@media (max-width: 600px) {
 
   #shorts {
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    padding: 0;
+    width: 100% !important;
   }
 
-  #shortsGrid {
-    width: 100vw;
+  #shorts .sectionHead {
+    width: calc(100% - 20px);
+  }
+
+  #shorts .sectionHead h2,
+  #shorts .sectionHead h1 {
+    font-size: 22px;
   }
 
   .nockageShortsFeed {
-    height: calc(100dvh - 60px);
+    gap: 0;
+    padding: 0 0 20px;
   }
 
   .nockageShortItem {
     width: 100vw;
-    height: calc(100dvh - 60px);
-    min-height: 0;
+
+    height: calc(100svh - 65px);
+
+    min-height: 500px;
+
+    border-radius: 0;
+
+    box-shadow: none;
+  }
+
+  .nockageShortVideo,
+  .nockageShortEmbed {
+    height: 100%;
   }
 
   .nockageShortOverlay {
     padding:
-      25px
-      82px
-      25px
-      16px;
+      100px
+      15px
+      18px;
   }
 
-  .nockageShortActions {
-    right: 10px;
-    bottom: 25px;
+  .nockageShortTitle {
+    font-size: 18px;
   }
 
-  .nockageShortActions button,
-  .nockageShortActions a,
-  .nockageShortActions::before,
-  .nockageShortActions::after {
-    width: 46px;
-    height: 46px;
+  .nockageShortMeta {
+    font-size: 13px;
   }
 
 }
@@ -1062,21 +1209,76 @@ label {
    VERY SMALL PHONES
    ============================================================ */
 
-@media (max-width: 430px) {
+@media (max-width: 420px) {
 
   .videoGrid,
   #homeGrid,
   #searchGrid,
-  #subsGrid {
+  #subsGrid,
+  #profileContent .videoGrid {
     grid-template-columns: 1fr;
   }
 
-  #studioStats {
-    grid-template-columns: 1fr 1fr;
+  .heroActions {
+    flex-direction: column;
   }
 
-  .nockageShortTitle {
-    font-size: 17px;
+  .heroActions > * {
+    width: 100%;
   }
 
+  .profileHead {
+    padding: 15px;
+  }
+
+  .avatar {
+    width: 62px;
+    height: 62px;
+  }
+
+}
+
+/* ============================================================
+   REDUCED MOTION
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+
+}
+
+/* ============================================================
+   SCROLLBARS
+   ============================================================ */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color:
+    rgba(255,255,255,.22)
+    transparent;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,.18);
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,.3);
 }
