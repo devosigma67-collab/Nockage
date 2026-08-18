@@ -386,38 +386,6 @@ function setupAuth() {
 // VIDEOS
 // ===============================
 
-async function queryVideos({
-  shorts = false,
-  creator = null,
-  search = null,
-  limit = 30
-} = {}) {
-  if (!ready) return [];
-
-  let q = sb
-    .from("videos")
-    .select(`
-      id,
-      user_id,
-      title,
-      description,
-      video_url,
-      thumbnail_url,
-      visibility,
-      is_short,
-      views,
-      created_at,
-      profiles (
-        username,
-        display_name
-      )
-    `)
-    .eq("visibility", "public")
-    .eq("is_short", shorts)
-    .order("created_at", {
-      ascending: false
-    })
-    .limit(limit);
 
   if (creator) {
     q = q.eq("user_id", creator);
@@ -643,12 +611,13 @@ async function showWatch(id) {
     await sb
       .from("videos")
       .select(`
-        *,
-        profiles (
-          username,
-          display_name
-        )
-      `)
+  *,
+  profiles!videos_user_id_fkey (
+    username,
+    display_name,
+    avatar_url
+  )
+`)
       .eq("id", id)
       .maybeSingle();
 
@@ -1459,16 +1428,15 @@ function setupUpload() {
             "100%";
         }
 
-        toast(
-          "Published to Nockage!"
-        );
+        toast("Published to Nockage!");
 
-        e.target.reset();
+e.target.reset();
 
-        setTimeout(() => {
-          location.hash =
-            "#studio";
-        }, 500);
+await loadHome();
+
+setTimeout(() => {
+  location.hash = "#home";
+}, 300);
 
       } catch (err) {
         console.error(
