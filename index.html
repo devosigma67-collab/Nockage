@@ -2,7 +2,6 @@
 <html lang="en">
 <head>
 
-  <!-- Google Search Console verification -->
   <meta
     name="google-site-verification"
     content="uTkgnF4BqF7AqFzpl2iM5-vXJbtuz4GhShcGcbqSWW0"
@@ -20,7 +19,6 @@
     content="#08090d"
   >
 
-  <!-- Google SEO -->
   <meta
     name="description"
     content="Watch videos on Nockage and share your videos!"
@@ -36,13 +34,11 @@
     content="index,follow"
   >
 
-  <!-- Canonical homepage -->
   <link
     rel="canonical"
     href="./"
   >
 
-  <!-- Nockage icon -->
   <link
     rel="icon"
     type="image/png"
@@ -54,7 +50,6 @@
     href="./assets/nockage-logo.png"
   >
 
-  <!-- Open Graph -->
   <meta
     property="og:type"
     content="website"
@@ -80,7 +75,6 @@
     content="./assets/nockage-logo.png"
   >
 
-  <!-- Twitter / social preview -->
   <meta
     name="twitter:card"
     content="summary"
@@ -106,7 +100,6 @@
     href="./styles.css"
   >
 
-  <!-- GOOGLE TITLE -->
   <title>Nockage - Watch and Create</title>
 
 </head>
@@ -114,6 +107,100 @@
 <body>
 
   <div id="toast"></div>
+
+  <!-- ======================================================
+       DESKTOP SIDEBAR
+       ====================================================== -->
+
+  <aside
+    class="sideNav"
+    id="sideNav"
+    aria-label="Nockage navigation"
+  >
+
+    <a
+      class="sideBrand"
+      href="#home"
+      aria-label="Nockage Home"
+    >
+      <img
+        src="./assets/nockage-logo.png"
+        alt="Nockage"
+      >
+      <span>NOCKAGE</span>
+    </a>
+
+    <div class="sideNavGroup">
+
+      <p class="sideLabel">MAIN</p>
+
+      <a
+        class="sideNavLink"
+        href="#home"
+      >
+        <span class="sideIcon">⌂</span>
+        <span>Home</span>
+      </a>
+
+      <a
+        class="sideNavLink"
+        href="#shorts"
+      >
+        <span class="sideIcon">▶</span>
+        <span>Shorts</span>
+      </a>
+
+      <a
+        class="sideNavLink"
+        href="#subscriptions"
+      >
+        <span class="sideIcon">★</span>
+        <span>Subscriptions</span>
+      </a>
+
+    </div>
+
+    <div class="sideNavDivider"></div>
+
+    <div class="sideNavGroup">
+
+      <p class="sideLabel">CREATE</p>
+
+      <a
+        class="sideNavLink"
+        href="#upload"
+      >
+        <span class="sideIcon">＋</span>
+        <span>Create</span>
+      </a>
+
+      <a
+        class="sideNavLink"
+        href="#studio"
+      >
+        <span class="sideIcon">▣</span>
+        <span>Studio</span>
+      </a>
+
+    </div>
+
+    <div class="sideNavDivider"></div>
+
+    <div class="sideNavGroup">
+
+      <p class="sideLabel">ACCOUNT</p>
+
+      <a
+        class="sideNavLink"
+        href="#settings"
+      >
+        <span class="sideIcon">⚙</span>
+        <span>Settings</span>
+      </a>
+
+    </div>
+
+  </aside>
 
 
   <!-- ======================================================
@@ -158,11 +245,18 @@
     </div>
 
 
-    <nav id="desktopNav" aria-label="Main navigation">
+    <nav
+      id="desktopNav"
+      aria-label="Main navigation"
+    >
 
-      <a href="#home">Home</a>
+      <a href="#home">
+        Home
+      </a>
 
-      <a href="#shorts">Shorts</a>
+      <a href="#shorts">
+        Shorts
+      </a>
 
       <a href="#subscriptions">
         Subscriptions
@@ -202,7 +296,6 @@
        ====================================================== -->
 
   <main>
-
 
     <!-- ====================================================
          HOME
@@ -274,7 +367,9 @@
 
       <div class="sectionHead">
 
-        <h2>Recommended</h2>
+        <h2>
+          Recommended
+        </h2>
 
         <span id="homeCount"></span>
 
@@ -300,7 +395,9 @@
 
       <div class="sectionHead">
 
-        <h2>Shorts</h2>
+        <h2>
+          Shorts
+        </h2>
 
         <button
           class="ghost"
@@ -331,7 +428,9 @@
 
       <div class="sectionHead">
 
-        <h2>Subscriptions</h2>
+        <h2>
+          Subscriptions
+        </h2>
 
       </div>
 
@@ -362,7 +461,9 @@
 
       <div class="sectionHead">
 
-        <h2>Search results</h2>
+        <h2>
+          Search results
+        </h2>
 
         <span id="searchLabel"></span>
 
@@ -401,7 +502,9 @@
 
       <div class="sectionHead">
 
-        <h2>Nockage Studio</h2>
+        <h2>
+          Nockage Studio
+        </h2>
 
         <button
           class="primary"
@@ -413,16 +516,16 @@
 
       </div>
 
-
       <div
         id="studioStats"
         class="stats"
       ></div>
 
-
       <div class="panel">
 
-        <h3>Your videos</h3>
+        <h3>
+          Your videos
+        </h3>
 
         <div id="studioVideos"></div>
 
@@ -460,7 +563,6 @@
           Create on Nockage
         </h2>
 
-
         <div class="modeTabs">
 
           <button
@@ -481,7 +583,6 @@
 
         </div>
 
-
         <form id="uploadForm">
 
           <label>
@@ -497,14 +598,12 @@
 
           </label>
 
-
           <div
             id="fileInfo"
             class="hint"
           >
             Maximum 50 MB on the free backend.
           </div>
-
 
           <label>
 
@@ -518,7 +617,6 @@
 
           </label>
 
-
           <label>
 
             Description
@@ -529,7 +627,6 @@
             ></textarea>
 
           </label>
-
 
           <label>
 
@@ -543,13 +640,11 @@
 
           </label>
 
-
           <input
             id="visibility"
             type="hidden"
             value="public"
           >
-
 
           <label class="check">
 
@@ -563,14 +658,12 @@
 
           </label>
 
-
           <button
             class="primary wide"
             type="submit"
           >
             Publish
           </button>
-
 
           <div
             id="uploadProgress"
@@ -599,7 +692,9 @@
 
       <div class="formWrap">
 
-        <h2>Settings</h2>
+        <h2>
+          Settings
+        </h2>
 
         <p>
           Account:
@@ -622,6 +717,75 @@
 
 
   <!-- ======================================================
+       MOBILE BOTTOM NAV
+       ====================================================== -->
+
+  <nav
+    class="mobileBottomNav"
+    aria-label="Mobile navigation"
+  >
+
+    <a
+      class="mobileNavItem"
+      href="#home"
+    >
+      <span class="mobileNavIcon">
+        ⌂
+      </span>
+      <span>
+        Home
+      </span>
+    </a>
+
+    <a
+      class="mobileNavItem"
+      href="#shorts"
+    >
+      <span class="mobileNavIcon">
+        ▶
+      </span>
+      <span>
+        Shorts
+      </span>
+    </a>
+
+    <a
+      class="mobileCreate"
+      href="#upload"
+      aria-label="Create"
+    >
+      <span>＋</span>
+    </a>
+
+    <a
+      class="mobileNavItem"
+      href="#subscriptions"
+    >
+      <span class="mobileNavIcon">
+        ★
+      </span>
+      <span>
+        Subs
+      </span>
+    </a>
+
+    <a
+      class="mobileNavItem"
+      id="mobileProfileNav"
+      href="#settings"
+    >
+      <span class="mobileNavIcon">
+        ●
+      </span>
+      <span>
+        You
+      </span>
+    </a>
+
+  </nav>
+
+
+  <!-- ======================================================
        AUTH MODAL
        ====================================================== -->
 
@@ -641,24 +805,20 @@
         ×
       </button>
 
-
       <img
         class="modalLogo"
         src="./assets/nockage-logo.png"
         alt="Nockage"
       >
 
-
       <h2 id="authTitle">
         Create your Nockage account
       </h2>
-
 
       <p class="muted">
         Create your Nockage account with
         a username, email and password.
       </p>
-
 
       <form
         id="authForm"
@@ -684,7 +844,6 @@
 
         </label>
 
-
         <label id="emailLabel">
 
           Email
@@ -700,7 +859,6 @@
           >
 
         </label>
-
 
         <label>
 
@@ -719,7 +877,6 @@
 
         </label>
 
-
         <button
           class="primary wide"
           id="authSubmit"
@@ -730,7 +887,6 @@
 
       </form>
 
-
       <button
         class="linkBtn"
         id="switchAuth"
@@ -739,7 +895,6 @@
         Already have an account?
         Log in
       </button>
-
 
       <p
         id="authHint"
