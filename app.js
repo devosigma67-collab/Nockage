@@ -165,10 +165,10 @@ function isEmbedUrl(url) {
     value.includes("/embed/") ||
     value.includes("fembed.co/embed/") ||
     value.includes("embed.vdohide") ||
-    value.includes("/player/")
+    value.includes("/player/") ||
+    value.includes("avcaption.com/watch/")
   );
 }
-
 function page(id) {
   document
     .querySelectorAll(".page")
