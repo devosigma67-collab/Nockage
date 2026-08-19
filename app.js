@@ -4826,7 +4826,7 @@ function setupUpload() {
             .textContent =
               file
                 ? `${file.name} · ${(file.size / 1048576).toFixed(1)} MB`
-                : "Maximum 50 MB on the free backend.";
+                : "Maximum 100 MB on the free backend.";
         }
       }
     );
@@ -5083,7 +5083,7 @@ function setupUpload() {
 
             $("fileInfo")
               .textContent =
-                "Maximum 50 MB on the free backend.";
+                "Maximum 100 MB on the free backend.";
           }
 
           setHash(
