@@ -4912,12 +4912,12 @@ function setupUpload() {
 
         if (
           videoFile.size >
-          50 *
+          100 *
           1024 *
           1024
         ) {
           return toast(
-            "Video must be 50 MB or smaller."
+            "Video must be 100 MB or smaller."
           );
         }
 
